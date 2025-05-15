@@ -23,7 +23,7 @@ public class ResidentUseCase implements ResidentUseCaseInputPort {
 
 
   @Override
-  public ResidentDTO createEmployee(ResidentDTO ResidentDTO) {
+  public ResidentDTO createResident(ResidentDTO ResidentDTO) {
 
     Resident resident = residentMapper.toEntity(ResidentDTO);
 
@@ -48,7 +48,7 @@ public class ResidentUseCase implements ResidentUseCaseInputPort {
   }
 
   @Override
-  public ResidentDTO updateEmployee(ResidentDTO ResidentDTO) {
+  public ResidentDTO updateResident(ResidentDTO ResidentDTO) {
 
     Resident resident = residentMapper.toEntity(ResidentDTO);
 
@@ -104,7 +104,7 @@ public class ResidentUseCase implements ResidentUseCaseInputPort {
   }
 
   @Override
-  public List<ResidentDTO> listAllEmployees(int page, int size) {
+  public List<ResidentDTO> listAllResidents(int page, int size) {
 
     List<ResidentDTO> residentDTOList =  residentPersistenceOutputPort.listAll(page, size).stream().map(resident -> residentMapper.toDto(resident)).collect(
       Collectors.toList());

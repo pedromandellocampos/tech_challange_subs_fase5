@@ -2,6 +2,9 @@ package com.fiap.pos.tech.tech_challange_subs_fase5.resident.infra.repository.re
 
 import com.fiap.pos.tech.tech_challange_subs_fase5.resident.core.model.Resident;
 import com.fiap.pos.tech.tech_challange_subs_fase5.resident.core.usecase.ports.output.ResidentPersistenceOutputPort;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
@@ -11,11 +14,12 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
+@Data
+@AllArgsConstructor
 public class ResidentPersistenceOutputPortImpl implements ResidentPersistenceOutputPort {
 
   ResidentEntityMapper residentEntityMapper;
   ResidentJPARepository jpaRepository;
-
 
   @Override
   public Resident save(Resident Resident) {

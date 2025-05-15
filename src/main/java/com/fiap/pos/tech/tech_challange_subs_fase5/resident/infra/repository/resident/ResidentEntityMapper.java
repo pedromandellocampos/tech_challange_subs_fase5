@@ -5,6 +5,7 @@ import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
 public interface ResidentEntityMapper {
+
   ResidentEntity toEntity(Resident resident);
   Resident toDomain(ResidentEntity residentEntity);
 }

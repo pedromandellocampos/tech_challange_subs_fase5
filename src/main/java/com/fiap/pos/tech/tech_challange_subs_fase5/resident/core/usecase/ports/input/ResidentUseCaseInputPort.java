@@ -7,11 +7,11 @@ import java.util.List;
 
 public interface ResidentUseCaseInputPort {
 
-  ResidentDTO createEmployee(ResidentDTO ResidentDTO);
-  ResidentDTO updateEmployee(ResidentDTO ResidentDTO);
+  ResidentDTO createResident(ResidentDTO ResidentDTO);
+  ResidentDTO updateResident(ResidentDTO ResidentDTO);
   ResidentDTO getEmployeeById(Long id);
   ResidentDTO getEmployeeByEmail(String email);
-  List<ResidentDTO> listAllEmployees(int page, int size);
+  List<ResidentDTO> listAllResidents(int page, int size);
   boolean deleteEmployee(Long id);
   ResidentDTO inactivateEmployee(Long id);
 
