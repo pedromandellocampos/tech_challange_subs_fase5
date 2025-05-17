@@ -23,6 +23,4 @@ public class Resident {
 
     // Add any other fields or methods as needed
 
-
-
 }
