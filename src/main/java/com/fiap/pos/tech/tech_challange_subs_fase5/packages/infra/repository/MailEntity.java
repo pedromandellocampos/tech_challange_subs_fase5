@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -24,12 +25,12 @@ public class MailEntity {
   String deliveryIssuerName;
   Long employeeRecipientId;
   Long residentRecipientId;
-  LocalDateTime deliveryTimestamp;
+  LocalDate deliveryTimestamp;
 
   String unity;
 
   Long residentAcknowledgedById;
-  LocalDateTime acknowledgmentTimestamp;
+  LocalDate acknowledgmentTimestamp;
 
   boolean receivedByResident;
 

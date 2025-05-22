@@ -17,7 +17,6 @@ import java.util.stream.Collectors;
 @Component
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
 public class EmployeeJPAPersistenceOutputPortImpl implements EmployeePersistenceOutputPort {
 
   EmployeeJPARepository employeeJPARepository;

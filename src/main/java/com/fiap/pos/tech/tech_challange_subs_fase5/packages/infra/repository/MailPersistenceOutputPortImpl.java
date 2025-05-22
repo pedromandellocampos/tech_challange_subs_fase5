@@ -4,6 +4,8 @@ import com.fiap.pos.tech.tech_challange_subs_fase5.packages.core.model.Mail;
 import com.fiap.pos.tech.tech_challange_subs_fase5.packages.core.usecases.ports.output.MailPersistenceOutputPort;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -31,10 +33,9 @@ public class MailPersistenceOutputPortImpl implements MailPersistenceOutputPort 
     return List.of();
   }
 
-
   @Override
   public List<Mail> listMails(int page, int size) {
-    List<MailEntity> mailEntities = mailJPARepository.findAll();
+    Page<MailEntity> mailEntities = mailJPARepository.findAll(Pageable.ofSize(size).withPage(page));
     return mailEntities.stream()
         .map(mailEntityMapper::toDomain)
         .toList();
