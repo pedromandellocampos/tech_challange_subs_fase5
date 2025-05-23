@@ -83,7 +83,10 @@ public class EmployeeUseCase implements EmployeeUseCaseInputPort {
 
   @Override
   public EmployeeDTO getEmployeeByEmail(String email) {
-    return null;
+    Employee employee = employeePersistenceOutputPort.findByEmail(email).orElseThrow(() -> {
+      throw new IllegalArgumentException("Employee not found");
+    });
+    return employeeMapper.toDto(employee);
   }
 
   @Override

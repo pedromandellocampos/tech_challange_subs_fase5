@@ -1,20 +1,17 @@
 package com.fiap.pos.tech.tech_challange_subs_fase5.employee.infra.web.dto;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.mapstruct.Mapper;
-import org.springframework.validation.annotation.Validated;
-
-import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Validated
+@Valid
 public class EmployeeDTORegister {
 
   @NotBlank(message = "Name is mandatory")

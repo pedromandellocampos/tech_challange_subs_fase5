@@ -1,6 +1,7 @@
 package com.fiap.pos.tech.tech_challange_subs_fase5.employee.infra.repository.employee;
 
 import jakarta.persistence.*;
+import jakarta.validation.Valid;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -8,6 +9,7 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "employee")
 @Data
+@Valid
 public class EmployeeJPAEntity {
 
   @Id
