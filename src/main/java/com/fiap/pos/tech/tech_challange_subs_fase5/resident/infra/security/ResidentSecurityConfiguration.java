@@ -19,7 +19,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @AllArgsConstructor
 public class ResidentSecurityConfiguration {
 
-  EmployeeSecurityFilter employeeSecurityFilter;
+  ResidentSecurityFilter employeeSecurityFilter;
 
   @Bean
   public SecurityFilterChain residentSecurityFilterChain(HttpSecurity http) throws Exception {
