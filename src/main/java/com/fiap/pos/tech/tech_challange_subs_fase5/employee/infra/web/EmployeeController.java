@@ -4,6 +4,7 @@ import com.fiap.pos.tech.tech_challange_subs_fase5.employee.core.usecases.Dto.Em
 import com.fiap.pos.tech.tech_challange_subs_fase5.employee.core.usecases.ports.input.EmployeeUseCaseInputPort;
 import com.fiap.pos.tech.tech_challange_subs_fase5.employee.infra.security.JwtHandler;
 import com.fiap.pos.tech.tech_challange_subs_fase5.employee.infra.security.dto.EmployeeUserDetailDTO;
+import com.fiap.pos.tech.tech_challange_subs_fase5.employee.infra.security.dto.TokenReturnDTO;
 import com.fiap.pos.tech.tech_challange_subs_fase5.employee.infra.web.dto.*;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -85,12 +86,12 @@ public class EmployeeController {
   }
 
   @PostMapping("/login")
-  public ResponseEntity<String> authorize(@RequestBody @Valid EmployeeLoginDTO employeeLoginDTO) {
+  public ResponseEntity<TokenReturnDTO> authorize(@RequestBody @Valid EmployeeLoginDTO employeeLoginDTO) {
     var userNamePassword = new UsernamePasswordAuthenticationToken(employeeLoginDTO.getEmail(), employeeLoginDTO.getPassword());
     var auth = this.authenticationManager.authenticate(userNamePassword);
     var token = jwtHandler.generateToken((EmployeeUserDetailDTO) auth.getPrincipal());
 
-    return ResponseEntity.ok(token);
+    return ResponseEntity.ok(new TokenReturnDTO(token));
   }
 
 
