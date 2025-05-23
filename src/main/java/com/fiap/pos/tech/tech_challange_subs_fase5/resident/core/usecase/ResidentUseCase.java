@@ -93,7 +93,7 @@ public class ResidentUseCase implements ResidentUseCaseInputPort {
   }
 
   @Override
-  public ResidentDTO getEmployeeByEmail(String email) {
+  public ResidentDTO getResidentByEmail(String email) {
 
     Resident resident = residentPersistenceOutputPort.findByEmail(email).orElseThrow(() -> {
         throw new IllegalArgumentException("Resident not found");
@@ -125,7 +125,7 @@ public class ResidentUseCase implements ResidentUseCaseInputPort {
   }
 
   @Override
-  public ResidentDTO inactivateEmployee(Long id) {
+  public ResidentDTO inactivateResident(Long id) {
 
     Resident resident = residentPersistenceOutputPort.findById(id).orElseThrow(() -> {
         throw new IllegalArgumentException("Resident not found");

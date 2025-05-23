@@ -1,4 +1,4 @@
-package com.fiap.pos.tech.tech_challange_subs_fase5.employee.infra.security;
+package com.fiap.pos.tech.tech_challange_subs_fase5.resident.infra.security;
 
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -6,46 +6,33 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-@Configuration
-@AllArgsConstructor
-@Order(1)
-public class EmployeeSecurityConfig {
 
-  SecurityFilter securityFilter;
+@Configuration
+@Order(2)
+@AllArgsConstructor
+public class ResidentSecurityConfiguration {
+
+  EmployeeSecurityFilter employeeSecurityFilter;
 
   @Bean
-  public SecurityFilterChain employeeSecurityFilterChain(HttpSecurity http) throws Exception {
+  public SecurityFilterChain residentSecurityFilterChain(HttpSecurity http) throws Exception {
     return http
-      .securityMatcher("/api/v1/employees/**")
+      .securityMatcher("/api/v1/residents/**")
       .csrf(AbstractHttpConfigurer::disable)
       .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
       .authorizeHttpRequests(auth -> auth
-        .requestMatchers("/api/v1/employees/login").permitAll()
-        .requestMatchers(HttpMethod.POST, "/api/v1/employees").permitAll()
-        .anyRequest().authenticated() // Cadastro de novo empregado
+        .requestMatchers("/api/v1/residents/login").permitAll()
+        .requestMatchers(HttpMethod.POST, "/api/v1/residents").permitAll() // Cadastro de novo residente
       )
-      .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
       .build();
   }
 
-  @Bean
-  public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
-    return configuration.getAuthenticationManager();
-  }
-
-  @Bean
-  public PasswordEncoder passwordEncoder() {
-    return new BCryptPasswordEncoder();
-  }
 
 }

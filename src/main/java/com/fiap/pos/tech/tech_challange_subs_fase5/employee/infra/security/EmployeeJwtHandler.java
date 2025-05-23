@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
 @Component
-public class JwtHandler {
+public class EmployeeJwtHandler {
 
   @Value("${jwt.secret}")
   private String secret;

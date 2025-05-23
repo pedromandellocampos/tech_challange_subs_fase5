@@ -10,10 +10,10 @@ public interface ResidentUseCaseInputPort {
   ResidentDTO createResident(ResidentDTO ResidentDTO);
   ResidentDTO updateResident(ResidentDTO ResidentDTO);
   ResidentDTO getEmployeeById(Long id);
-  ResidentDTO getEmployeeByEmail(String email);
+  ResidentDTO getResidentByEmail(String email);
   List<ResidentDTO> listAllResidents(int page, int size);
   boolean deleteEmployee(Long id);
-  ResidentDTO inactivateEmployee(Long id);
+  ResidentDTO inactivateResident(Long id);
 
 
 }
