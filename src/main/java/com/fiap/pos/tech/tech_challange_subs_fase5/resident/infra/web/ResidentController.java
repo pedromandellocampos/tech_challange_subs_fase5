@@ -13,6 +13,7 @@ import org.antlr.v4.runtime.tree.pattern.TokenTagToken;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -28,12 +29,14 @@ public class ResidentController {
   ResidentDTOToReturnMapper residentDTOToReturnMapper;
   ResidentUseCaseInputPort residentUseCaseInputPort;
   AuthenticationManager authenticationManager;
+  PasswordEncoder passwordEncoder;
   ResidentJwtHandler residentJwtHandler;
 
   @PostMapping
   public ResponseEntity<ResidentDTOToReturn> createResident(@RequestBody ResidentDTORegister residentDTORegister) {
 
     ResidentDTO residentDTO = residentDTORegisterMapper.toEntity(residentDTORegister);
+    residentDTO.setPassword(passwordEncoder.encode(residentDTO.getPassword()));
     ResidentDTOToReturn residentDTOToReturn = residentDTOToReturnMapper.toDto(residentUseCaseInputPort.createResident(residentDTO));
 
     URI uri = URI.create("/api/v1/residents/" + residentDTOToReturn.getId());
@@ -78,10 +81,11 @@ public class ResidentController {
 
     System.out.println("AQUI");
     var userNamePassword = new UsernamePasswordAuthenticationToken(residentLoginDTO.getEmail(), residentLoginDTO.getPassword());
-    System.out.println("AQUI");
+    System.out.println("AQUI1");
     var auth = this.authenticationManager.authenticate(userNamePassword);
+    System.out.println("AQUI12");
     var token = residentJwtHandler.generateToken((ResidentUserDetailDTO) auth.getPrincipal());
-    System.out.println("AQUI");
+    System.out.println("AQUI2");
 
     return ResponseEntity.ok(new TokenReturnDTO(token));
 

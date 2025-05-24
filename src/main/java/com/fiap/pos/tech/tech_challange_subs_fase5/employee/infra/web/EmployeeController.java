@@ -91,7 +91,6 @@ public class EmployeeController {
     var userNamePassword = new UsernamePasswordAuthenticationToken(employeeLoginDTO.getEmail(), employeeLoginDTO.getPassword());
     System.out.println("AQUI");
 
-
     var auth = this.authenticationManager.authenticate(userNamePassword);
     var token = employeeJwtHandler.generateToken((EmployeeUserDetailDTO) auth.getPrincipal());
     System.out.println("AQUI");

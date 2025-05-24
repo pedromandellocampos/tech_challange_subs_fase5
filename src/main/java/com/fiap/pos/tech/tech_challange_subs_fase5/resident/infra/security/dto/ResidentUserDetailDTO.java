@@ -32,22 +32,22 @@ public class ResidentUserDetailDTO implements UserDetails {
 
   @Override
   public String getPassword() {
-    return "";
+    return this.password;
   }
 
   @Override
   public String getUsername() {
-    return "";
+    return this.email;
   }
 
   @Override
   public boolean isAccountNonExpired() {
-    return UserDetails.super.isAccountNonExpired();
+    return this.active;
   }
 
   @Override
   public boolean isAccountNonLocked() {
-    return UserDetails.super.isAccountNonLocked();
+    return this.active;
   }
 
   @Override
@@ -57,6 +57,6 @@ public class ResidentUserDetailDTO implements UserDetails {
 
   @Override
   public boolean isEnabled() {
-    return UserDetails.super.isEnabled();
+    return this.active;
   }
 }

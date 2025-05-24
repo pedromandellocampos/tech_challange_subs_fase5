@@ -15,7 +15,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 
 @Configuration
-@Order(2)
 @AllArgsConstructor
 public class ResidentSecurityConfiguration {
 

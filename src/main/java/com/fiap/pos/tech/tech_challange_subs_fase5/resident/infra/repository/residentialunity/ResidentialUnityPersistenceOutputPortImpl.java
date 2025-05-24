@@ -31,16 +31,21 @@ public class ResidentialUnityPersistenceOutputPortImpl implements ResidentialUni
 
   @Override
   public ResidentialUnity updateResidentialUnity(ResidentialUnity residentialUnityDTO) {
-    return null;
+    ResidentialUnityEntity residentialUnityEntity = residentialUnityMapper.toEntity(residentialUnityDTO);
+    ResidentialUnityEntity residentialUnityEntityUpdated = residentialUnityRepository.save(residentialUnityEntity);
+    return residentialUnityMapper.toDomain(residentialUnityEntityUpdated);
   }
 
   @Override
   public void deleteResidentialUnity(Long id) {
-
+    ResidentialUnityEntity residentialUnityEntity = residentialUnityRepository.findById(id).orElseThrow(() -> new RuntimeException("Residential Unity not found"));
+    residentialUnityRepository.delete(residentialUnityEntity);
   }
 
   @Override
   public ResidentialUnity getResidentialUnityByNumber(String number) {
+
+
     return null;
   }
 
