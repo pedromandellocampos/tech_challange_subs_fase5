@@ -1,8 +1,8 @@
 package com.fiap.pos.tech.tech_challange_subs_fase5.employee.infra.web;
 
+import com.fiap.pos.tech.tech_challange_subs_fase5.authentication.infra.security.JwtHandler;
 import com.fiap.pos.tech.tech_challange_subs_fase5.employee.core.usecases.Dto.EmployeeDTO;
 import com.fiap.pos.tech.tech_challange_subs_fase5.employee.core.usecases.ports.input.EmployeeUseCaseInputPort;
-import com.fiap.pos.tech.tech_challange_subs_fase5.employee.infra.security.EmployeeJwtHandler;
 import com.fiap.pos.tech.tech_challange_subs_fase5.employee.infra.security.dto.EmployeeUserDetailDTO;
 import com.fiap.pos.tech.tech_challange_subs_fase5.employee.infra.security.dto.TokenReturnDTO;
 import com.fiap.pos.tech.tech_challange_subs_fase5.employee.infra.web.dto.*;
@@ -34,7 +34,7 @@ public class EmployeeController {
   EmployeeDTOToReturnMapper employeeDTOToReturnMapper;
   PasswordEncoder passwordEncoder;
   AuthenticationManager authenticationManager;
-  EmployeeJwtHandler employeeJwtHandler;
+  JwtHandler jwtHandler;
 
   @PostMapping
   @Transactional
@@ -92,7 +92,7 @@ public class EmployeeController {
     System.out.println("AQUI");
 
     var auth = this.authenticationManager.authenticate(userNamePassword);
-    var token = employeeJwtHandler.generateToken((EmployeeUserDetailDTO) auth.getPrincipal());
+    var token = jwtHandler.generateToken((EmployeeUserDetailDTO) auth.getPrincipal());
     System.out.println("AQUI");
     return ResponseEntity.ok(new TokenReturnDTO(token));
   }

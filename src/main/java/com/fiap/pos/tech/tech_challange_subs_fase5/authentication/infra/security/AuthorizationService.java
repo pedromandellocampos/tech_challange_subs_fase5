@@ -1,4 +1,4 @@
-package com.fiap.pos.tech.tech_challange_subs_fase5.employee.infra.security;
+package com.fiap.pos.tech.tech_challange_subs_fase5.authentication.infra.security;
 
 import com.fiap.pos.tech.tech_challange_subs_fase5.employee.core.usecases.Dto.EmployeeDTO;
 import com.fiap.pos.tech.tech_challange_subs_fase5.employee.core.usecases.ports.input.EmployeeUseCaseInputPort;
@@ -26,9 +26,7 @@ public class AuthorizationService implements UserDetailsService {
 
     try {
       ResidentDTO residentDTO = residentUseCaseInputPort.getResidentByEmail(username);
-      System.out.println("AQUI 123 -> " + residentDTO);
       UserDetails userDetails = residentUserDetailDTOMapper.toUserDetail(residentDTO);
-      System.out.println("AQUI USER DETAISL " +  userDetails.getPassword());
       return userDetails;
     } catch (Exception e){
       EmployeeDTO employeeDTO = employeeUseCaseInputPort.getEmployeeByEmail(username);

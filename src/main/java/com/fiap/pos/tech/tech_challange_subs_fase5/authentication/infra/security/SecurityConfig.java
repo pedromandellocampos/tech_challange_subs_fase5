@@ -1,4 +1,4 @@
-package com.fiap.pos.tech.tech_challange_subs_fase5.employee.infra.security;
+package com.fiap.pos.tech.tech_challange_subs_fase5.authentication.infra.security;
 
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -6,9 +6,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -18,21 +18,23 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @AllArgsConstructor
-@Order(1)
-public class EmployeeSecurityConfig {
+@EnableWebSecurity
+public class SecurityConfig {
 
   SecurityFilter securityFilter;
 
   @Bean
   public SecurityFilterChain employeeSecurityFilterChain(HttpSecurity http) throws Exception {
     return http
-      .securityMatcher("/api/v1/employees/**")
+      .securityMatcher("/api/v1/**")
       .csrf(AbstractHttpConfigurer::disable)
       .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
       .authorizeHttpRequests(auth -> auth
         .requestMatchers("/api/v1/employees/login").permitAll()
         .requestMatchers(HttpMethod.POST, "/api/v1/employees").permitAll()
-        .anyRequest().authenticated() // Cadastro de novo empregado
+        .requestMatchers("/api/v1/residents/login").permitAll()
+        .requestMatchers(HttpMethod.POST, "/api/v1/residents").permitAll() // Cadastro de novo residente
+        .anyRequest().authenticated()
       )
       .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
       .build();

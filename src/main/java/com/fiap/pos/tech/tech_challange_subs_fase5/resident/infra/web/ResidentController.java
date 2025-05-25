@@ -1,15 +1,12 @@
 package com.fiap.pos.tech.tech_challange_subs_fase5.resident.infra.web;
 
-import com.fiap.pos.tech.tech_challange_subs_fase5.employee.infra.security.dto.EmployeeUserDetailDTO;
+import com.fiap.pos.tech.tech_challange_subs_fase5.authentication.infra.security.JwtHandler;
 import com.fiap.pos.tech.tech_challange_subs_fase5.resident.core.usecase.dto.ResidentDTO;
 import com.fiap.pos.tech.tech_challange_subs_fase5.resident.core.usecase.ports.input.ResidentUseCaseInputPort;
-import com.fiap.pos.tech.tech_challange_subs_fase5.resident.infra.security.ResidentJwtHandler;
 import com.fiap.pos.tech.tech_challange_subs_fase5.resident.infra.security.dto.ResidentUserDetailDTO;
 import com.fiap.pos.tech.tech_challange_subs_fase5.resident.infra.web.dto.*;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.antlr.v4.runtime.Token;
-import org.antlr.v4.runtime.tree.pattern.TokenTagToken;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -30,7 +27,7 @@ public class ResidentController {
   ResidentUseCaseInputPort residentUseCaseInputPort;
   AuthenticationManager authenticationManager;
   PasswordEncoder passwordEncoder;
-  ResidentJwtHandler residentJwtHandler;
+  JwtHandler jwtHandler;
 
   @PostMapping
   public ResponseEntity<ResidentDTOToReturn> createResident(@RequestBody ResidentDTORegister residentDTORegister) {
@@ -84,11 +81,10 @@ public class ResidentController {
     System.out.println("AQUI1");
     var auth = this.authenticationManager.authenticate(userNamePassword);
     System.out.println("AQUI12");
-    var token = residentJwtHandler.generateToken((ResidentUserDetailDTO) auth.getPrincipal());
+    var token = jwtHandler.generateToken((ResidentUserDetailDTO) auth.getPrincipal());
     System.out.println("AQUI2");
 
     return ResponseEntity.ok(new TokenReturnDTO(token));
-
 
 
   }
