@@ -4,6 +4,7 @@ import com.fiap.pos.tech.tech_challange_subs_fase5.packages.core.model.Mail;
 import com.fiap.pos.tech.tech_challange_subs_fase5.packages.core.usecases.dto.MailDTO;
 import com.fiap.pos.tech.tech_challange_subs_fase5.packages.core.usecases.dto.MailMapper;
 import com.fiap.pos.tech.tech_challange_subs_fase5.packages.core.usecases.ports.input.MailUseCaseInputPort;
+import com.fiap.pos.tech.tech_challange_subs_fase5.packages.core.usecases.ports.input.NotificationUseCaseInputPort;
 import com.fiap.pos.tech.tech_challange_subs_fase5.packages.core.usecases.ports.output.MailMessageOutputPort;
 import com.fiap.pos.tech.tech_challange_subs_fase5.packages.core.usecases.ports.output.MailPersistenceOutputPort;
 import lombok.AllArgsConstructor;
@@ -47,6 +48,7 @@ public class MailUseCase implements MailUseCaseInputPort {
     Mail mail =  mailMapper.toEntity(mailDTO);
     System.out.println(mail);
     mailMessageOutputPort.sendNotification(mailDTO);
+
     return mailMapper.toDto(mailPersistenceOutputPort.save(mail));
   }
 

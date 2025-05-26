@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.Arrays;
 import java.util.List;
 
 @Component
@@ -25,13 +26,13 @@ public class JwtHandler {
   public String generateToken(EmployeeUserDetailDTO user){
     try{
       Algorithm algorithm = Algorithm.HMAC256(secret);
-      String token = JWT.create()
+      return JWT.create()
         .withIssuer(issuer)
         .withSubject(user.getEmail())
         .withExpiresAt(genExpirationDate())
-        .withClaim("role", "EMPLOYEE")
+        .withClaim("role", "ROLE_EMPLOYEE")
         .sign(algorithm);
-      return token;
+
     } catch (JWTCreationException exception) {
       throw new RuntimeException("Error while generating token", exception);
     }
@@ -40,13 +41,13 @@ public class JwtHandler {
   public String generateToken(ResidentUserDetailDTO user){
     try{
       Algorithm algorithm = Algorithm.HMAC256(secret);
-      String token = JWT.create()
+      return JWT.create()
         .withIssuer(issuer)
         .withSubject(user.getEmail())
         .withExpiresAt(genExpirationDate())
-        .withClaim("role", "RESIDENT")
+        .withClaim("role", "ROLE_RESIDENT")
         .sign(algorithm);
-      return token;
+
     } catch (JWTCreationException exception) {
       throw new RuntimeException("Error while generating token", exception);
     }
@@ -69,12 +70,16 @@ public class JwtHandler {
   public List<String> getRoles(String token){
     try {
       Algorithm algorithm = Algorithm.HMAC256(secret);
-      return JWT.require(algorithm)
+      String role = JWT.require(algorithm)
         .withIssuer(issuer)
         .build()
         .verify(token)
-        .getClaim("role")
-        .asList(String.class);
+        .getClaim("role").asString();
+
+      List<String> roles = Arrays.asList(role.split(","));
+
+      System.out.println("Aqui dentro valida roles: " + role);
+      return roles;
     } catch (JWTVerificationException exception){
       return List.of();
     }

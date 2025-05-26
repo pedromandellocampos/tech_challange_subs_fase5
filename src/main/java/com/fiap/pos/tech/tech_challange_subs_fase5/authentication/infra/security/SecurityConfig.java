@@ -33,7 +33,8 @@ public class SecurityConfig {
         .requestMatchers("/api/v1/employees/login").permitAll()
         .requestMatchers(HttpMethod.POST, "/api/v1/employees").permitAll()
         .requestMatchers("/api/v1/residents/login").permitAll()
-        .requestMatchers(HttpMethod.POST, "/api/v1/residents").permitAll() // Cadastro de novo residente
+        .requestMatchers(HttpMethod.POST, "/api/v1/residents").permitAll()
+        .requestMatchers(HttpMethod.POST, "/api/v1/mail").hasRole("EMPLOYEE")
         .anyRequest().authenticated()
       )
       .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)

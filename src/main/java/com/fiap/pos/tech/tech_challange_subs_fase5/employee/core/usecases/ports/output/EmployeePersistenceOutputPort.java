@@ -9,7 +9,6 @@ public interface EmployeePersistenceOutputPort {
 
 
   Employee save(Employee employee);
-
   boolean delete(Employee employee);
   List<Employee>  listAll(int page, int size);
   Optional<Employee> findById(Long id);

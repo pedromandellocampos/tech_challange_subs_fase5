@@ -31,7 +31,6 @@ public class ResidentController {
 
   @PostMapping
   public ResponseEntity<ResidentDTOToReturn> createResident(@RequestBody ResidentDTORegister residentDTORegister) {
-
     ResidentDTO residentDTO = residentDTORegisterMapper.toEntity(residentDTORegister);
     residentDTO.setPassword(passwordEncoder.encode(residentDTO.getPassword()));
     ResidentDTOToReturn residentDTOToReturn = residentDTOToReturnMapper.toDto(residentUseCaseInputPort.createResident(residentDTO));
@@ -43,7 +42,6 @@ public class ResidentController {
 
   @PutMapping
   public ResponseEntity<ResidentDTOToReturn> updateResident(@RequestBody ResidentDTORegister residentDTORegister) {
-
     ResidentDTO residentDTO = residentDTORegisterMapper.toEntity(residentDTORegister);
     ResidentDTOToReturn residentDTOToReturn = residentDTOToReturnMapper.toDto(residentUseCaseInputPort.updateResident(residentDTO));
 
@@ -76,17 +74,12 @@ public class ResidentController {
   @PostMapping("/login")
   public ResponseEntity<TokenReturnDTO> login(@RequestBody @Valid ResidentLoginDTO residentLoginDTO) {
 
-    System.out.println("AQUI");
     var userNamePassword = new UsernamePasswordAuthenticationToken(residentLoginDTO.getEmail(), residentLoginDTO.getPassword());
-    System.out.println("AQUI1");
     var auth = this.authenticationManager.authenticate(userNamePassword);
-    System.out.println("AQUI12");
     var token = jwtHandler.generateToken((ResidentUserDetailDTO) auth.getPrincipal());
-    System.out.println("AQUI2");
+
 
     return ResponseEntity.ok(new TokenReturnDTO(token));
-
-
   }
 
 
