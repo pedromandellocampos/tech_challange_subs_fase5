@@ -40,11 +40,11 @@ public class ResidentController {
     return ResponseEntity.created(uri).body(residentDTOToReturn);
   }
 
-  @PutMapping
-  public ResponseEntity<ResidentDTOToReturn> updateResident(@RequestBody ResidentDTORegister residentDTORegister) {
+  @PutMapping("/{id}")
+  public ResponseEntity<ResidentDTOToReturn> updateResident(@RequestBody @Valid ResidentDTORegister residentDTORegister, @PathVariable Long id) {
     ResidentDTO residentDTO = residentDTORegisterMapper.toEntity(residentDTORegister);
+    residentDTO.setId(id);
     ResidentDTOToReturn residentDTOToReturn = residentDTOToReturnMapper.toDto(residentUseCaseInputPort.updateResident(residentDTO));
-
     return ResponseEntity.ok(residentDTOToReturn);
   }
 
@@ -56,8 +56,8 @@ public class ResidentController {
     return ResponseEntity.ok(residentDTOToReturn);
   }
 
-  @GetMapping("/{page}/{size}")
-  public ResponseEntity<List<ResidentDTOToReturn>> getAllResidents(@PathVariable Integer page, @PathVariable Integer size) {
+  @GetMapping()
+  public ResponseEntity<List<ResidentDTOToReturn>> getAllResidents(@RequestParam(required = false) int page, @RequestParam(required = false) int size) {
     List<ResidentDTO> residentDTOList = residentUseCaseInputPort.listAllResidents(page, size);
 
     return ResponseEntity.ok(residentDTOList.stream().map(residentDTOToReturnMapper::toDto).collect(Collectors.toList()));

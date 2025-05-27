@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 
 @Component
 @Data
@@ -42,6 +43,12 @@ public class MailPersistenceOutputPortImpl implements MailPersistenceOutputPort 
   }
 
   @Override
+  public Optional<Mail> getMailById(Long id) {
+    return mailJPARepository.findById(id)
+        .map(mailEntityMapper::toDomain);
+  }
+
+  @Override
   public Mail save(Mail mail) {
     MailEntity mailEntity = mailEntityMapper.toEntity(mail);
     return mailEntityMapper.toDomain(mailJPARepository.save(mailEntity));
@@ -51,5 +58,13 @@ public class MailPersistenceOutputPortImpl implements MailPersistenceOutputPort 
   public boolean delete(Long id) {
     mailJPARepository.deleteById(id);
     return true;
+  }
+
+  @Override
+  public List<Mail> findMailsByUnity(String unity) {
+    List<MailEntity> mailEntities = mailJPARepository.findMailEntitiesByUnity(unity);
+    return mailEntities.stream()
+        .map(mailEntityMapper::toDomain)
+        .toList();
   }
 }

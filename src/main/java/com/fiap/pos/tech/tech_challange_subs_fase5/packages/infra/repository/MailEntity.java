@@ -34,6 +34,9 @@ public class MailEntity {
 
   boolean receivedByResident;
 
+  Long residentConfirmedMailId;
+  boolean receivedByEmail;
+
 
 
 }

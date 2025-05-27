@@ -47,30 +47,12 @@ public class EmployeeUseCase implements EmployeeUseCaseInputPort {
   public EmployeeDTO updateEmployee(EmployeeDTO employeeDto) {
 
     Employee employee = employeeMapper.toEntity(employeeDto);
+    Employee existingEmployee = employeePersistenceOutputPort.findById(employee.getId())
+        .orElseThrow(() -> new IllegalArgumentException("Employee not found"));
 
     // Validate employee data
-    if (employee.getName() == null || employee.getName().isEmpty()) {
-      throw new IllegalArgumentException("Name cannot be null or empty");
-    }
-    if (employee.getEmail() == null || employee.getEmail().isEmpty()) {
-      throw new IllegalArgumentException("Email cannot be null or empty");
-    }
-    if (employee.getPhone() == null || employee.getPhone().isEmpty()) {
-      throw new IllegalArgumentException("Phone cannot be null or empty");
-    }
-    if (employee.getDateOfBirth() == null) {
-      throw new IllegalArgumentException("Date of birth cannot be null");
-    }
-    if (employee.getHireDate() == null) {
-      throw new IllegalArgumentException("Hire date cannot be null");
-    }
-    if (employee.getId() == null) {
-      throw new IllegalArgumentException("ID cannot be null");
-    }
-
-    // Check if employee exists
-    if (employeePersistenceOutputPort.findByEmail(employee.getEmail()).isEmpty()) {
-      throw new IllegalArgumentException("Employee not found");
+    if(employee.getPassword() == null || employee.getPassword().isEmpty()) {
+      employee.setPassword(existingEmployee.getPassword());
     }
 
     return employeeMapper.toDto(employeePersistenceOutputPort.save(employee));
@@ -78,7 +60,10 @@ public class EmployeeUseCase implements EmployeeUseCaseInputPort {
 
   @Override
   public EmployeeDTO getEmployeeById(Long id) {
-    return null;
+    Employee employee = employeePersistenceOutputPort.findById(id).orElseThrow(() -> {
+      throw new IllegalArgumentException("Employee not found");
+    });
+    return employeeMapper.toDto(employee);
   }
 
   @Override
@@ -120,6 +105,16 @@ public class EmployeeUseCase implements EmployeeUseCaseInputPort {
     }
     employee.setActive(false);
 
+    return employeeMapper.toDto(employeePersistenceOutputPort.save(employee));
+  }
+
+  @Override
+  public EmployeeDTO changeEmployeePassword(Long id, String newPassword) {
+    Employee employee = employeePersistenceOutputPort.findById(id).orElseThrow(() -> {
+      throw new IllegalArgumentException("Employee not found");
+    });
+
+    employee.setPassword(newPassword);
     return employeeMapper.toDto(employeePersistenceOutputPort.save(employee));
   }
 

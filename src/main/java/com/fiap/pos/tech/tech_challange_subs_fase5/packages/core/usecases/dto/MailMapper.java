@@ -8,7 +8,9 @@ import org.mapstruct.Mapping;
 public interface MailMapper {
 
   @Mapping(target = "deliveryTimestamp", dateFormat = "dd/MM/yyyy")
+  @Mapping(target = "acknowledgmentTimestamp", dateFormat = "dd/MM/yyyy")
   MailDTO toDto(Mail packages);
   @Mapping(target = "deliveryTimestamp", dateFormat = "dd/MM/yyyy")
+  @Mapping(target = "acknowledgmentTimestamp", dateFormat = "dd/MM/yyyy")
   Mail toEntity(MailDTO mailDTO);
 }

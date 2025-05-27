@@ -39,15 +39,27 @@ public class EmployeeController {
   @PostMapping
   @Transactional
   public ResponseEntity<EmployeeDTOToReturn> createEmployee(@RequestBody @Valid EmployeeDTORegister employeeDTORegister)
-    {
-      EmployeeDTO employeeDTO = employeeDTORegisterMapper.toDto(employeeDTORegister);
-      employeeDTO.setPassword(passwordEncoder.encode(employeeDTO.getPassword()));
-      EmployeeDTO employeeJPAEntity = employeeUseCaseInputPort.createEmployee(employeeDTO);
-      EmployeeDTOToReturn employeeDTOToReturn = employeeDTOToReturnMapper.toDto(employeeJPAEntity);
-      String location = "/api/v1/employees/" + employeeJPAEntity.getId();
-      URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path(location).build().toUri();
+  {
+    EmployeeDTO employeeDTO = employeeDTORegisterMapper.toDto(employeeDTORegister);
+    employeeDTO.setPassword(passwordEncoder.encode(employeeDTO.getPassword()));
+    EmployeeDTO employeeJPAEntity = employeeUseCaseInputPort.createEmployee(employeeDTO);
+    EmployeeDTOToReturn employeeDTOToReturn = employeeDTOToReturnMapper.toDto(employeeJPAEntity);
+    String location = "/api/v1/employees/" + employeeJPAEntity.getId();
+    URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path(location).build().toUri();
 
-      return ResponseEntity.created(uri).body(employeeDTOToReturn);
+    return ResponseEntity.created(uri).body(employeeDTOToReturn);
+  }
+
+  @GetMapping("/{id}")
+  @Transactional(readOnly = true)
+  public ResponseEntity<EmployeeDTOToReturn> getEmployeeById(@PathVariable(name = "id") Long id) {
+
+    EmployeeDTO employeeDTO = employeeUseCaseInputPort.getEmployeeById(id);
+
+    EmployeeDTOToReturn employeeDTOToReturn = employeeDTOToReturnMapper.toDto(employeeDTO);
+    System.out.println("EmployeeDTOToReturn: " + employeeDTO.getName());
+
+    return ResponseEntity.ok().body(employeeDTOToReturn);
   }
 
   @GetMapping
@@ -95,6 +107,15 @@ public class EmployeeController {
     var token = jwtHandler.generateToken((EmployeeUserDetailDTO) auth.getPrincipal());
     System.out.println("AQUI");
     return ResponseEntity.ok(new TokenReturnDTO(token));
+  }
+
+  @PutMapping("/change-password/{id}")
+  public ResponseEntity<Object> changePassword(@PathVariable(name = "id") Long id, @RequestBody @Valid ChangePasswordDTO changePasswordDTO) {
+
+    EmployeeDTO employeeDTO = employeeUseCaseInputPort.changeEmployeePassword(id, passwordEncoder.encode(changePasswordDTO.getNewPassword()));
+    EmployeeDTOToReturn employeeDTOToReturn = employeeDTOToReturnMapper.toDto(employeeDTO);
+
+    return ResponseEntity.ok().body(employeeDTOToReturn);
   }
 
 

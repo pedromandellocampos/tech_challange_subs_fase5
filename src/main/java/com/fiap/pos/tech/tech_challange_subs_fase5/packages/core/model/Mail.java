@@ -26,4 +26,7 @@ public class Mail {
 
   boolean receivedByResident;
 
+  Long residentConfirmedMailId;
+  boolean receivedByEmail;
+
 }

@@ -14,6 +14,7 @@ public interface EmployeeUseCaseInputPort {
   List<EmployeeDTO> listAllEmployees(int page, int size);
   boolean deleteEmployee(Long id);
   EmployeeDTO inactivateEmployee(Long id);
+  EmployeeDTO changeEmployeePassword(Long id, String newPassword);
 
 
 }

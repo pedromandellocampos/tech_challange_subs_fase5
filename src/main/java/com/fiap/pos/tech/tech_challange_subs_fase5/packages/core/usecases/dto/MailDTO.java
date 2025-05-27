@@ -23,4 +23,7 @@ public class MailDTO {
 
   boolean receivedByResident;
 
+  Long residentConfirmedMailId;
+  boolean receivedByEmail;
+
 }

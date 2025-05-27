@@ -52,30 +52,33 @@ public class ResidentUseCase implements ResidentUseCaseInputPort {
 
     Resident resident = residentMapper.toEntity(ResidentDTO);
 
+
+    var existingResident = residentPersistenceOutputPort.findById(resident.getId());
+    // Check if resident exists
+    if (existingResident.isEmpty()) {
+      throw new IllegalArgumentException("Resident not found");
+    }
+
+
     // Validate resident data
     if (resident.getName() == null || resident.getName().isEmpty()) {
-      throw new IllegalArgumentException("Name cannot be null or empty");
+
+      resident.setName(existingResident.get().getName());
     }
     if (resident.getEmail() == null || resident.getEmail().isEmpty()) {
-      throw new IllegalArgumentException("Email cannot be null or empty");
+      resident.setEmail(existingResident.get().getEmail());
     }
     if (resident.getPhone() == null || resident.getPhone().isEmpty()) {
-      throw new IllegalArgumentException("Phone cannot be null or empty");
+      resident.setPhone(existingResident.get().getPhone());
     }
     if (resident.getApartment() == null || resident.getApartment().isEmpty()) {
-      throw new IllegalArgumentException("Apartment cannot be null or empty");
+      resident.setApartment(existingResident.get().getApartment());
     }
     if (resident.getBirthDate() == null) {
-      throw new IllegalArgumentException("Date of birth cannot be null");
+      resident.setBirthDate(existingResident.get().getBirthDate());
     }
-
-    if (resident.getId() == null) {
-      throw new IllegalArgumentException("Id cannot be null");
-    }
-
-    // Check if resident exists
-    if (residentPersistenceOutputPort.findByEmail(resident.getEmail()).isEmpty()) {
-      throw new IllegalArgumentException("Resident not found");
+    if (resident.getPassword() == null) {
+      resident.setPassword(existingResident.get().getPassword());
     }
 
     return residentMapper.toDto(residentPersistenceOutputPort.save(resident));
