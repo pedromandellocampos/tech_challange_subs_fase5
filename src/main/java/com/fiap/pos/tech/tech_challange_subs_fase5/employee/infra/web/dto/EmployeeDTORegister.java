@@ -16,7 +16,6 @@ public class EmployeeDTORegister {
 
   @NotBlank(message = "Name is mandatory")
   private String name;
-
   @Email(message = "Email should be valid")
   private String email;
   @NotBlank
