@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.fiap.pos.tech</groupId>
     <artifactId>tech_challange_subs_fase5</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.1</version>
     <name>tech_challange_subs_fase5</name>
     <description>tech_challange_subs_fase5</description>
     <url/>
@@ -146,6 +146,12 @@
             <artifactId>jacoco-maven-plugin</artifactId>
             <version>0.8.13</version>
         </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -177,12 +183,14 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
+                    <mainClass>com.fiap.pos.tech.tech_challange_subs_fase5.TechChallangeSubsFase5Application</mainClass>
                     <excludes>
                         <exclude>
                             <groupId>org.projectlombok</groupId>
                             <artifactId>lombok</artifactId>
                         </exclude>
                     </excludes>
+                    <layers enabled="true"/>
                 </configuration>
             </plugin>
             <plugin>

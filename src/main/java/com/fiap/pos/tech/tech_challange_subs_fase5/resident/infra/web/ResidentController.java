@@ -50,7 +50,7 @@ public class ResidentController {
 
   @GetMapping("/{id}")
   public ResponseEntity<ResidentDTOToReturn> getResident(@PathVariable Long id){
-    ResidentDTO residentDTO = residentUseCaseInputPort.getEmployeeById(id);
+    ResidentDTO residentDTO = residentUseCaseInputPort.getResidentById(id);
     ResidentDTOToReturn residentDTOToReturn = residentDTOToReturnMapper.toDto(residentDTO);
 
     return ResponseEntity.ok(residentDTOToReturn);
@@ -65,7 +65,7 @@ public class ResidentController {
 
   @DeleteMapping("/{id}")
   public ResponseEntity<Object> deleteResident(@PathVariable Integer id) {
-    residentUseCaseInputPort.deleteEmployee(id.longValue());
+    residentUseCaseInputPort.deleteResident(id.longValue());
 
     return ResponseEntity.noContent().build();
   }

@@ -4,7 +4,6 @@ import com.fiap.pos.tech.tech_challange_subs_fase5.resident.core.model.Resident;
 import com.fiap.pos.tech.tech_challange_subs_fase5.resident.core.usecase.ports.output.ResidentPersistenceOutputPort;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
@@ -52,19 +51,12 @@ public class ResidentPersistenceOutputPortImpl implements ResidentPersistenceOut
   @Override
   public Optional<Resident> findById(Long id) {
 
-    ResidentEntity residentEntity = jpaRepository.findById(id).orElseThrow(() -> {
-      throw new IllegalArgumentException("Resident not found with id: " + id);
-    });
-
-      return Optional.of(residentEntityMapper.toDomain(residentEntity));
+      return jpaRepository.findById(id).map(residentEntityMapper::toDomain);
   }
 
   @Override
   public Optional<Resident> findByEmail(String email) {
-    ResidentEntity residentEntity = jpaRepository.findByEmail(email).orElseThrow(() -> {
-      throw new IllegalArgumentException("Resident not found with email: " + email);
-    });
-      return Optional.of(residentEntityMapper.toDomain(residentEntity));
+      return jpaRepository.findByEmail(email).map(residentEntityMapper::toDomain);
   }
 
   @Override
