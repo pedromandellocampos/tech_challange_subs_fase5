@@ -151,9 +151,12 @@
             <artifactId>h2</artifactId>
             <scope>test</scope>
         </dependency>
-
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+            <version>2.8.8</version>
+        </dependency>
     </dependencies>
-
     <build>
         <plugins>
             <plugin>
@@ -175,7 +178,6 @@
                             <artifactId>mapstruct-processor</artifactId>
                             <version>1.6.3</version>
                         </path>
-
                     </annotationProcessorPaths>
                 </configuration>
             </plugin>
@@ -183,15 +185,14 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>com.fiap.pos.tech.tech_challange_subs_fase5.TechChallangeSubsFase5Application</mainClass>
                     <excludes>
                         <exclude>
                             <groupId>org.projectlombok</groupId>
                             <artifactId>lombok</artifactId>
                         </exclude>
                     </excludes>
-                    <layers enabled="true"/>
                 </configuration>
+
             </plugin>
             <plugin>
                 <groupId>org.jacoco</groupId>
