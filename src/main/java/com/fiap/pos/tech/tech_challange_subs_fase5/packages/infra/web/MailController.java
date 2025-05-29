@@ -51,10 +51,11 @@ public class MailController {
 
   @PutMapping("/{id}")
   public ResponseEntity<MailDTO> updateMail(@RequestBody @Valid UpdateMailDTO updateMailDTO, @PathVariable Long id) {
-    System.out.println("UpdateMailDTO -->> " + updateMailDTO);
+
     MailDTO mailDTO = updateMailDTOToDTOMapper.toDto(updateMailDTO);
-    System.out.println("MailDTO -->> " + mailDTO);
     mailDTO.setId(id);
+    System.out.println("UpdateMailDTO -->> " + updateMailDTO);
+    System.out.println("MailDTO -->> " + mailDTO);
     MailDTO mailDTOToReturn = mailUseCaseInputPort.receiveMail(mailDTO);
     return ResponseEntity.ok(mailDTOToReturn);
   }

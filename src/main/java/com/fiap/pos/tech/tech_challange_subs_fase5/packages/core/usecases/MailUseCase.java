@@ -74,8 +74,9 @@ public class MailUseCase implements MailUseCaseInputPort {
     mailSaved.setResidentAcknowledgedById(mail.getResidentAcknowledgedById());
     mailSaved.setReceivedByResident(true);
 
+    System.out.println("Mail received: " + mailSaved);
     validateMail(mailSaved);
-
+    System.out.println("Mail received2: " + mailSaved);
     return mailMapper.toDto(mailPersistenceOutputPort.save(mailSaved));
   }
 
@@ -112,17 +113,20 @@ public class MailUseCase implements MailUseCaseInputPort {
         .toList();
   }
 
-
-
   public void validateMail(Mail mail){
     if (mail.getResidentAcknowledgedById() != null) {
       residentUseCaseInputPort.getResidentById(mail.getResidentAcknowledgedById());
+      System.out.println("AQUI1");
     }
     if (mail.getResidentRecipientId() != null){
+      System.out.println("AQUI2.1 -> " + mail.getResidentRecipientId());
       residentUseCaseInputPort.getResidentById(mail.getResidentRecipientId());
+      System.out.println("AQUI2");
     }
-    if(mail.getAcknowledgmentTimestamp() != null){
+    if(mail.getResidentConfirmedMailId() != null){
+      System.out.println("AQUI3.1 -> " + mail.getResidentConfirmedMailId());
       residentUseCaseInputPort.getResidentById(mail.getResidentConfirmedMailId());
+      System.out.println("AQUI3");
     }
   }
 }
