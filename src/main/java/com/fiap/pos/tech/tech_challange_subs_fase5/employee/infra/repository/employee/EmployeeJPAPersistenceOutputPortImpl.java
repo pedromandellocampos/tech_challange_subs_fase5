@@ -48,42 +48,17 @@ public class EmployeeJPAPersistenceOutputPortImpl implements EmployeePersistence
 
   @Override
   public Optional<Employee> findById(Long id) {
-
-    EmployeeJPAEntity employeeJPAEntity = employeeJPARepository.findById(id).orElseThrow(() -> new RuntimeException("Employee not found"));
-
-    if (employeeJPAEntity != null) {
-      return Optional.of(employeeJPAEntityMapper.toDomain(employeeJPAEntity));
-    } else
-    {
-      return Optional.empty();
-    }
-
+    return employeeJPARepository.findById(id).map(employeeJPAEntityMapper::toDomain);
   }
 
   @Override
   public Optional<Employee> findByEmail(String email) {
-
-    EmployeeJPAEntity employeeJPAEntity = employeeJPARepository.findByEmail(email).orElseThrow(() -> new RuntimeException("Employee not found"));
-
-    if (employeeJPAEntity != null) {
-      return Optional.of(employeeJPAEntityMapper.toDomain(employeeJPAEntity));
-    } else
-    {
-      return Optional.empty();
-    }
+    return employeeJPARepository.findByEmail(email).map(employeeJPAEntityMapper::toDomain);
   }
 
   @Override
   public Optional<Employee> findByPhone(String phone) {
-
-    EmployeeJPAEntity employeeJPAEntity = employeeJPARepository.findByPhone(phone).orElseThrow(() -> new RuntimeException("Employee not found"));
-
-    if (employeeJPAEntity != null) {
-      return Optional.of(employeeJPAEntityMapper.toDomain(employeeJPAEntity));
-    } else
-    {
-      return Optional.empty();
-    }
+    return employeeJPARepository.findByPhone(phone).map(employeeJPAEntityMapper::toDomain);
   }
 
 }

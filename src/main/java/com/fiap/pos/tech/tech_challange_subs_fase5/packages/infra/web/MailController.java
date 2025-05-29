@@ -8,6 +8,8 @@ import com.fiap.pos.tech.tech_challange_subs_fase5.packages.core.usecases.ports.
 import com.fiap.pos.tech.tech_challange_subs_fase5.packages.infra.web.dto.*;
 import com.fiap.pos.tech.tech_challange_subs_fase5.resident.core.usecase.dto.ResidentDTO;
 import com.fiap.pos.tech.tech_challange_subs_fase5.resident.core.usecase.ports.input.ResidentUseCaseInputPort;
+import com.fiap.pos.tech.tech_challange_subs_fase5.resident.infra.security.dto.ResidentUserDetailDTO;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.http.ResponseEntity;
@@ -49,8 +51,10 @@ public class MailController {
   }
 
   @PutMapping("/{id}")
-  public ResponseEntity<MailDTO> updateMail(@RequestBody UpdateMailDTO updateMailDTO, @PathVariable Long id) {
+  public ResponseEntity<MailDTO> updateMail(@RequestBody @Valid UpdateMailDTO updateMailDTO, @PathVariable Long id) {
+    System.out.println("UpdateMailDTO -->> " + updateMailDTO);
     MailDTO mailDTO = updateMailDTOToDTOMapper.toDto(updateMailDTO);
+    System.out.println("MailDTO -->> " + mailDTO);
     mailDTO.setId(id);
     MailDTO mailDTOToReturn = mailUseCaseInputPort.receiveMail(mailDTO);
     return ResponseEntity.ok(mailDTOToReturn);
@@ -70,17 +74,21 @@ public class MailController {
 
   @GetMapping("/list-my-packages")
   public ResponseEntity<List<MailDTO>> listMyPackages(Authentication authentication) {
-    UserDetails userDetails = (EmployeeUserDetailDTO) authentication.getPrincipal();
+    UserDetails userDetails = (ResidentUserDetailDTO) authentication.getPrincipal();
     ResidentDTO residentDTO = residentUseCaseInputPort.getResidentByEmail(userDetails.getUsername());
     List<MailDTO> mailDTOList = mailUseCaseInputPort.getMailByUnity(residentDTO.getApartment());
     return ResponseEntity.ok(mailDTOList);
   }
 
   @PutMapping("/confirm-notification/{id}")
-  public ResponseEntity confirmNotification(@PathVariable Long id, @RequestBody ConfirmedMailDTO confirmedMailDTO) {
+  public ResponseEntity confirmNotification(@PathVariable Long id, @RequestBody Authentication authentication) {
 
-    MailDTO mailDTO = confirmedMailDTOToDTOMapper.toDTO(confirmedMailDTO);
+    UserDetails userDetails = (ResidentUserDetailDTO) authentication.getPrincipal();
+    ResidentDTO residentDTO = residentUseCaseInputPort.getResidentByEmail(userDetails.getUsername());
+
+    MailDTO mailDTO = new MailDTO();
     mailDTO.setId(id);
+    mailDTO.setResidentConfirmedMailId(residentDTO.getId());
     mailUseCaseInputPort.confirmNotification(mailDTO);
 
     return ResponseEntity.ok().build();

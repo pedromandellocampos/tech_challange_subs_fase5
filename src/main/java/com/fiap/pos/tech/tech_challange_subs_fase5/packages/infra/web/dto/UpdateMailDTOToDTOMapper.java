@@ -6,5 +6,8 @@ import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface UpdateMailDTOToDTOMapper {
+  @Mapping(target = "residentAcknowledgedById", source = "residentAcknowledgedById")
+  @Mapping(target = "acknowledgmentTimestamp", source = "acknowledgmentTimestamp")
+  @Mapping(target = "receivedByResident", source = "receivedByResident")
   MailDTO toDto(UpdateMailDTO updateMailDTO);
 }

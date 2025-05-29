@@ -70,6 +70,7 @@ public class MailUseCase implements MailUseCaseInputPort {
     mailSaved.setAcknowledgmentTimestamp(mail.getAcknowledgmentTimestamp());
     mailSaved.setResidentAcknowledgedById(mail.getResidentAcknowledgedById());
     mailSaved.setReceivedByResident(true);
+    System.out.println(mailSaved.toString());
     return mailMapper.toDto(mailPersistenceOutputPort.save(mailSaved));
   }
 
