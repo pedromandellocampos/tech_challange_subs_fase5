@@ -8,6 +8,10 @@ services:
     depends_on:
       - postgres
       - kafka
+    deploy:
+      resources:
+        limits:
+          memory: 2g
   postgres:
     image: 'postgres:latest'
     environment:
@@ -16,6 +20,10 @@ services:
       - 'POSTGRES_USER=postgres'
     ports:
       - '5432:5432'
+    deploy:
+      resources:
+        limits:
+          memory: 2g
   kafka:
     image: 'bitnami/kafka:latest'
     ports:
@@ -29,4 +37,7 @@ services:
       - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
       - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=0@localhost:9093
       - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
-
+    deploy:
+      resources:
+        limits:
+          memory: 2g
