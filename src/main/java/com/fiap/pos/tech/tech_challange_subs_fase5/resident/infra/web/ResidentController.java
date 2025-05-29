@@ -1,7 +1,7 @@
 package com.fiap.pos.tech.tech_challange_subs_fase5.resident.infra.web;
 
 import com.fiap.pos.tech.tech_challange_subs_fase5.authentication.infra.security.JwtHandler;
-import com.fiap.pos.tech.tech_challange_subs_fase5.employee.infra.web.dto.ChangePasswordDTO;
+import com.fiap.pos.tech.tech_challange_subs_fase5.infra.web.exceptions.UnauthorizedException;
 import com.fiap.pos.tech.tech_challange_subs_fase5.resident.core.usecase.dto.ResidentDTO;
 import com.fiap.pos.tech.tech_challange_subs_fase5.resident.core.usecase.ports.input.ResidentUseCaseInputPort;
 import com.fiap.pos.tech.tech_challange_subs_fase5.resident.infra.security.dto.ResidentUserDetailDTO;
@@ -11,6 +11,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -43,7 +45,15 @@ public class ResidentController {
   }
 
   @PutMapping("/{id}")
-  public ResponseEntity<ResidentDTOToReturn> updateResident(@RequestBody @Valid ResidentUpdateDTO residentUpdateDTO, @PathVariable Long id) {
+  public ResponseEntity<ResidentDTOToReturn> updateResident(@RequestBody @Valid ResidentUpdateDTO residentUpdateDTO, @PathVariable Long id, Authentication authentication) {
+
+    UserDetails userDetails = (ResidentUserDetailDTO) authentication.getPrincipal();
+
+    var resident = residentUseCaseInputPort.getResidentByEmail(userDetails.getUsername());
+    if (!resident.getId().equals(id)) {
+      throw new UnauthorizedException("You can only update your own resident information.");
+    }
+
     ResidentDTO residentDTO = residentUpdateDTOMapper.toDto(residentUpdateDTO);
     residentDTO.setId(id);
     ResidentDTOToReturn residentDTOToReturn = residentDTOToReturnMapper.toDto(residentUseCaseInputPort.updateResident(residentDTO));
@@ -82,8 +92,14 @@ public class ResidentController {
   }
 
   @PutMapping("/change-password/{id}")
-  public ResponseEntity<Object> changePassword(@PathVariable(name = "id") Long id, @RequestBody @Valid ChangePasswordDTO changePasswordDTO) {
+  public ResponseEntity<Object> changePassword(@PathVariable(name = "id") Long id, @RequestBody @Valid ChangePasswordDTO changePasswordDTO, Authentication authentication) {
 
+    UserDetails userDetails = (ResidentUserDetailDTO) authentication.getPrincipal();
+
+    var resident = residentUseCaseInputPort.getResidentByEmail(userDetails.getUsername());
+    if (!resident.getId().equals(id)) {
+      throw new UnauthorizedException("You can only update your own resident information.");
+    }
     ResidentDTO residentDTO = residentUseCaseInputPort.changeResidentPassword(id, passwordEncoder.encode(changePasswordDTO.getNewPassword()));
     ResidentDTOToReturn residentDTOToReturn = residentDTOToReturnMapper.toDto(residentDTO);
 

@@ -6,6 +6,7 @@ import com.fiap.pos.tech.tech_challange_subs_fase5.employee.core.usecases.ports.
 import com.fiap.pos.tech.tech_challange_subs_fase5.employee.infra.security.dto.EmployeeUserDetailDTO;
 import com.fiap.pos.tech.tech_challange_subs_fase5.employee.infra.security.dto.TokenReturnDTO;
 import com.fiap.pos.tech.tech_challange_subs_fase5.employee.infra.web.dto.*;
+import com.fiap.pos.tech.tech_challange_subs_fase5.infra.web.exceptions.UnauthorizedException;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -15,6 +16,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -81,7 +84,13 @@ public class EmployeeController {
 
   @PutMapping("/{id}")
   @Transactional
-  public ResponseEntity<EmployeeDTOToReturn> updateEmployee(@PathVariable(name = "id") Long id, @RequestBody EmployeeUpdateDTO employeeUpdateDTO) {
+  public ResponseEntity<EmployeeDTOToReturn> updateEmployee(@PathVariable(name = "id") Long id, @RequestBody EmployeeUpdateDTO employeeUpdateDTO, Authentication authentication) {
+
+    UserDetails userDetails = (EmployeeUserDetailDTO) authentication.getPrincipal();
+    EmployeeDTO employee = employeeUseCaseInputPort.getEmployeeByEmail(userDetails.getUsername());
+    if (!employee.getId().equals(id)) {
+      throw new UnauthorizedException("You can only update your own employee information.");
+    }
 
     EmployeeDTO employeeDTO = employeeUpdateDTOMapper.toDto(employeeUpdateDTO);
     employeeDTO.setId(id);
