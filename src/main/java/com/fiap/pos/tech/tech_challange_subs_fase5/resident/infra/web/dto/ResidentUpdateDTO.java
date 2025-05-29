@@ -6,21 +6,17 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 
-import java.time.LocalDate;
-
+@Validated
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Validated
-public class ResidentDTORegister {
+public class ResidentUpdateDTO {
+
   @NotBlank(message = "Name cannot be blank")
   private String name;
   @NotBlank(message = "Email cannot be blank")
   @Email(message = "Email should be valid")
   private String email;
-  @NotBlank
-  @Size(min = 6, max = 20)
-  private String password;
   @NotBlank(message = "Phone number cannot be blank")
   private String phone;
   @NotBlank(message = "Apartment cannot be blank")
@@ -30,4 +26,5 @@ public class ResidentDTORegister {
   private String birthDate;
   @NotNull(message = "Active status cannot be null")
   private boolean active;
+
 }

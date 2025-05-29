@@ -8,6 +8,7 @@ import com.fiap.pos.tech.tech_challange_subs_fase5.packages.core.usecases.dto.Ma
 import com.fiap.pos.tech.tech_challange_subs_fase5.packages.core.usecases.ports.input.MailUseCaseInputPort;
 import com.fiap.pos.tech.tech_challange_subs_fase5.packages.core.usecases.ports.output.MailMessageOutputPort;
 import com.fiap.pos.tech.tech_challange_subs_fase5.packages.core.usecases.ports.output.MailPersistenceOutputPort;
+import com.fiap.pos.tech.tech_challange_subs_fase5.resident.core.usecase.ports.input.ResidentUseCaseInputPort;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -15,8 +16,8 @@ import org.springframework.context.annotation.Configuration;
 public class MailConfiguration {
 
     @Bean
-    public MailUseCaseInputPort mailUseCase(MailPersistenceOutputPort mailPersistenceOutputPort, MailMapper mailMapper, MailMessageOutputPort mailMessageOutputPort) {
-      return new MailUseCase(mailPersistenceOutputPort, mailMapper, mailMessageOutputPort);
+    public MailUseCaseInputPort mailUseCase(MailPersistenceOutputPort mailPersistenceOutputPort, MailMapper mailMapper, MailMessageOutputPort mailMessageOutputPort, ResidentUseCaseInputPort residentUseCaseInputPort ) {
+      return new MailUseCase(mailPersistenceOutputPort, mailMapper, mailMessageOutputPort, residentUseCaseInputPort);
     }
 
 

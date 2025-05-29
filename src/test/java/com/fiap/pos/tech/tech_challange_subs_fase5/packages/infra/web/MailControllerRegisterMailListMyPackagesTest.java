@@ -132,7 +132,7 @@ class MailControllerRegisterMailListMyPackagesTest {
         .header("Authorization", employeeToken))
       .andExpect(status().isOk());
 
-    mockMvc.perform(get("/api/v1/mail/my-packages")
+    mockMvc.perform(get("/api/v1/mail/list-my-packages")
         .header("Authorization", residentToken))
       .andExpect(status().isOk())
       .andExpect(jsonPath("$[0].unity").value("101"));

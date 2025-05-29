@@ -6,6 +6,7 @@ import com.fiap.pos.tech.tech_challange_subs_fase5.packages.core.usecases.dto.Ma
 import com.fiap.pos.tech.tech_challange_subs_fase5.packages.core.usecases.dto.MailMapper;
 import com.fiap.pos.tech.tech_challange_subs_fase5.packages.core.usecases.ports.output.MailMessageOutputPort;
 import com.fiap.pos.tech.tech_challange_subs_fase5.packages.core.usecases.ports.output.MailPersistenceOutputPort;
+import com.fiap.pos.tech.tech_challange_subs_fase5.resident.core.usecase.ports.input.ResidentUseCaseInputPort;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -24,6 +25,7 @@ class MailUseCaseListAllMailsTest {
   private MailPersistenceOutputPort persistencePort;
   private MailMapper mapper;
   private MailMessageOutputPort messageOutputPort;
+  private ResidentUseCaseInputPort residentUseCaseInputPort;
   private MailUseCase useCase;
 
 
@@ -35,7 +37,8 @@ class MailUseCaseListAllMailsTest {
     persistencePort = mock(MailPersistenceOutputPort.class);
     mapper = mock(MailMapper.class);
     messageOutputPort = mock(MailMessageOutputPort.class);
-    useCase = new MailUseCase(persistencePort, mapper, messageOutputPort);
+    residentUseCaseInputPort = mock(ResidentUseCaseInputPort.class);
+    useCase = new MailUseCase(persistencePort, mapper, messageOutputPort, residentUseCaseInputPort);
   }
 
   @Test

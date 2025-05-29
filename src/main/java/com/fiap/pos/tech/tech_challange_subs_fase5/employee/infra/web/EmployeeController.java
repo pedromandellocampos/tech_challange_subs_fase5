@@ -29,12 +29,13 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class EmployeeController {
 
-  EmployeeUseCaseInputPort employeeUseCaseInputPort;
-  EmployeeDTORegisterMapper employeeDTORegisterMapper;
-  EmployeeDTOToReturnMapper employeeDTOToReturnMapper;
-  PasswordEncoder passwordEncoder;
-  AuthenticationManager authenticationManager;
-  JwtHandler jwtHandler;
+  private EmployeeUpdateDTOMapper employeeUpdateDTOMapper;
+  private EmployeeUseCaseInputPort employeeUseCaseInputPort;
+  private EmployeeDTORegisterMapper employeeDTORegisterMapper;
+  private EmployeeDTOToReturnMapper employeeDTOToReturnMapper;
+  private PasswordEncoder passwordEncoder;
+  private AuthenticationManager authenticationManager;
+  private JwtHandler jwtHandler;
 
   @PostMapping
   @Transactional
@@ -80,9 +81,9 @@ public class EmployeeController {
 
   @PutMapping("/{id}")
   @Transactional
-  public ResponseEntity<EmployeeDTOToReturn> updateEmployee(@PathVariable(name = "id") Long id, @RequestBody EmployeeDTORegister employeeDTORegister) {
+  public ResponseEntity<EmployeeDTOToReturn> updateEmployee(@PathVariable(name = "id") Long id, @RequestBody EmployeeUpdateDTO employeeUpdateDTO) {
 
-    EmployeeDTO employeeDTO = employeeDTORegisterMapper.toDto(employeeDTORegister);
+    EmployeeDTO employeeDTO = employeeUpdateDTOMapper.toDto(employeeUpdateDTO);
     employeeDTO.setId(id);
     EmployeeDTO employeeUpdated = employeeUseCaseInputPort.updateEmployee(employeeDTO);
     EmployeeDTOToReturn employeeDTOToReturn = employeeDTOToReturnMapper.toDto(employeeUpdated);

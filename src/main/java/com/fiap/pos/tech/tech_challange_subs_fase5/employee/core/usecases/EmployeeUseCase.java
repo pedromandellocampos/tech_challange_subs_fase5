@@ -39,7 +39,7 @@ public class EmployeeUseCase implements EmployeeUseCaseInputPort {
     if (employee.getHireDate() == null) {
       throw new IllegalArgumentException("Hire date cannot be null");
     }
-
+    validateEmployee(employee);
     return employeeMapper.toDto(employeePersistenceOutputPort.save(employee));
   }
 
@@ -50,6 +50,7 @@ public class EmployeeUseCase implements EmployeeUseCaseInputPort {
     Employee existingEmployee = employeePersistenceOutputPort.findById(employee.getId())
         .orElseThrow(() -> new IllegalArgumentException("Employee not found"));
 
+    validateEmployee(employee);
     // Validate employee data
     if(employee.getPassword() == null || employee.getPassword().isEmpty()) {
       employee.setPassword(existingEmployee.getPassword());
@@ -118,5 +119,20 @@ public class EmployeeUseCase implements EmployeeUseCaseInputPort {
     return employeeMapper.toDto(employeePersistenceOutputPort.save(employee));
   }
 
+
+  public void validateEmployee(Employee employee) {
+    if (employee.getEmail() == null || employee.getEmail().isEmpty()) {
+      throw new IllegalArgumentException("Email cannot be null or empty");
+    } else {
+      try{
+      EmployeeDTO employee1 = getEmployeeByEmail(employee.getEmail());
+        if (employee1 != null && employee1.getId() != employee.getId()) {
+          throw new IllegalArgumentException("Email already in use");
+        }
+      } catch (Exception e){
+        // If an exception is thrown, it means the email does not exist, so we can proceed
+      }
+    }
+  }
 
 }

@@ -135,7 +135,7 @@ class MailControllerRegisterMailConfirmNotificationTest {
       .getContentAsString();
 
     Integer mailId = JsonPath.read(response, "$.id");
-
+    System.out.println("ID ---> " + mailId);
 
     mockMvc.perform(put("/api/v1/mail/confirm-notification/" +  mailId)
         .header("Authorization", residentToken))
@@ -144,8 +144,8 @@ class MailControllerRegisterMailConfirmNotificationTest {
     mockMvc.perform(get("/api/v1/mail/" + mailId)
         .header("Authorization", employeeToken))
       .andExpect(status().isOk())
-      .andExpect(jsonPath("$.residentAcknowledgedById").value(1))
-      .andExpect(jsonPath("$.receivedByResident").value(true));
+      .andExpect(jsonPath("$.residentConfirmedMailId").value(1))
+      .andExpect(jsonPath("$.receivedByEmail").value(true));
 
   }
 

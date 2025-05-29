@@ -27,23 +27,14 @@ public class ResidentUseCase implements ResidentUseCaseInputPort {
 
     Resident resident = residentMapper.toEntity(ResidentDTO);
 
-    // Validate resident data
-    if (resident.getName() == null || resident.getName().isEmpty()) {
-      throw new IllegalArgumentException("Name cannot be null or empty");
-    }
     if (resident.getEmail() == null || resident.getEmail().isEmpty()) {
       throw new IllegalArgumentException("Email cannot be null or empty");
     }
     if (resident.getPhone() == null || resident.getPhone().isEmpty()) {
       throw new IllegalArgumentException("Phone cannot be null or empty");
     }
-    if (resident.getApartment() == null || resident.getApartment().isEmpty()) {
-      throw new IllegalArgumentException("Apartment cannot be null or empty");
-    }
-    if (resident.getBirthDate() == null) {
-      throw new IllegalArgumentException("Date of birth cannot be null");
-    }
 
+    validateResident(resident);
     return residentMapper.toDto(residentPersistenceOutputPort.save(resident));
   }
 
@@ -51,36 +42,13 @@ public class ResidentUseCase implements ResidentUseCaseInputPort {
   public ResidentDTO updateResident(ResidentDTO ResidentDTO) {
 
     Resident resident = residentMapper.toEntity(ResidentDTO);
+    var existingResident = getResidentById(resident.getId());
 
-
-    var existingResident = residentPersistenceOutputPort.findById(resident.getId());
-    // Check if resident exists
-    if (existingResident.isEmpty()) {
-      throw new IllegalArgumentException("Resident not found");
-    }
-
-
-    // Validate resident data
-    if (resident.getName() == null || resident.getName().isEmpty()) {
-
-      resident.setName(existingResident.get().getName());
-    }
-    if (resident.getEmail() == null || resident.getEmail().isEmpty()) {
-      resident.setEmail(existingResident.get().getEmail());
-    }
-    if (resident.getPhone() == null || resident.getPhone().isEmpty()) {
-      resident.setPhone(existingResident.get().getPhone());
-    }
-    if (resident.getApartment() == null || resident.getApartment().isEmpty()) {
-      resident.setApartment(existingResident.get().getApartment());
-    }
-    if (resident.getBirthDate() == null) {
-      resident.setBirthDate(existingResident.get().getBirthDate());
-    }
     if (resident.getPassword() == null) {
-      resident.setPassword(existingResident.get().getPassword());
+      resident.setPassword(existingResident.getPassword());
     }
 
+    validateResident(resident);
     return residentMapper.toDto(residentPersistenceOutputPort.save(resident));
   }
 
@@ -138,4 +106,31 @@ public class ResidentUseCase implements ResidentUseCaseInputPort {
     resident.setActive(false);
     return residentMapper.toDto(residentPersistenceOutputPort.save(resident));
   }
+
+
+  @Override
+  public ResidentDTO changeResidentPassword(Long id, String newPassword) {
+    Resident resident = residentPersistenceOutputPort.findById(id).orElseThrow(() -> {
+      throw new IllegalArgumentException("Employee not found");
+    });
+
+    resident.setPassword(newPassword);
+    return residentMapper.toDto(residentPersistenceOutputPort.save(resident));
+  }
+
+  public void validateResident(Resident resident) {
+    if (resident.getEmail() == null || resident.getEmail().isEmpty()) {
+      throw new IllegalArgumentException("Email cannot be null or empty");
+    } else {
+      try{
+        ResidentDTO residentDTO = getResidentById(resident.getId());
+        if(residentDTO != null && residentDTO.getId() != resident.getId()) {
+          throw new IllegalArgumentException("Email already exists");
+        }
+      } catch (Exception e) {
+      }
+    }
+  }
+
+
 }

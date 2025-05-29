@@ -6,19 +6,16 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 
+@Validated
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Validated
-public class EmployeeDTORegister {
+public class EmployeeUpdateDTO {
 
   @NotBlank(message = "Name is mandatory")
   private String name;
   @Email(message = "Email should be valid")
   private String email;
-  @NotBlank
-  @Size(min = 6, max = 20, message = "Password must be between 6 and 20 characters")
-  private String password;
   @NotBlank
   @Size(min = 10, max = 12, message = "Phone number must be between 10 and 12 characters")
   private String phone;

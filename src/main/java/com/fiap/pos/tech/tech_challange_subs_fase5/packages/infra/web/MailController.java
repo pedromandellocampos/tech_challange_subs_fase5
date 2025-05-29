@@ -30,7 +30,6 @@ public class MailController {
   private MailUseCaseInputPort mailUseCaseInputPort;
   private CreteMailDTOToDTOMapper creteMailDTOToDTOMapper;
   private UpdateMailDTOToDTOMapper updateMailDTOToDTOMapper;
-  private ConfirmedMailDTOToDTOMapper confirmedMailDTOToDTOMapper;
 
   @PostMapping
   public ResponseEntity<MailDTO> registerMail(@RequestBody CreateMailDTO mailDTO, Authentication authentication) {
@@ -74,15 +73,19 @@ public class MailController {
 
   @GetMapping("/list-my-packages")
   public ResponseEntity<List<MailDTO>> listMyPackages(Authentication authentication) {
+
     UserDetails userDetails = (ResidentUserDetailDTO) authentication.getPrincipal();
     ResidentDTO residentDTO = residentUseCaseInputPort.getResidentByEmail(userDetails.getUsername());
+    System.out.println("ResidentDTO -->> " + residentDTO);
     List<MailDTO> mailDTOList = mailUseCaseInputPort.getMailByUnity(residentDTO.getApartment());
+    System.out.println("MailDTOList -->> " + mailDTOList);
     return ResponseEntity.ok(mailDTOList);
   }
 
   @PutMapping("/confirm-notification/{id}")
-  public ResponseEntity confirmNotification(@PathVariable Long id, @RequestBody Authentication authentication) {
+  public ResponseEntity confirmNotification(@PathVariable Long id, Authentication authentication) {
 
+    System.out.println("Confirm Notification for Mail ID: " + id);
     UserDetails userDetails = (ResidentUserDetailDTO) authentication.getPrincipal();
     ResidentDTO residentDTO = residentUseCaseInputPort.getResidentByEmail(userDetails.getUsername());
 

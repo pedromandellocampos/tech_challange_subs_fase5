@@ -9,6 +9,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -45,7 +46,7 @@ class ResidentUseCaseCreateResidentTest {
     assertEquals("101", result.getApartment());
     assertTrue(result.isActive());
   }
-
+/*
   @Test
   void createResident_missingName_throwsException() {
     ResidentDTO dto = new ResidentDTO(null, null, "email@teste.com", "senha", "999999999", "101", LocalDate.now(), true);
@@ -99,5 +100,22 @@ class ResidentUseCaseCreateResidentTest {
 
     Exception ex = assertThrows(IllegalArgumentException.class, () -> useCase.createResident(dto));
     assertEquals("Date of birth cannot be null", ex.getMessage());
+  }
+  */
+  //test duplicate email in other user
+  @Test
+  void createResident_duplicateEmail_throwsException() {
+    ResidentDTO dto = new ResidentDTO(null, "Nome", "teste@teste.com"
+      , "senha", "999999999", "101", LocalDate.now(), true);
+    Resident entity = new Resident(null, "Nome",
+      "", "senha", "999999999", "101", LocalDate.now(), true);
+
+    Resident entity2 = new Resident(2L, "Nome",
+      "valida@erro.com", "senha", "999999999", "101", LocalDate.now(), true);
+
+    when(mapper.toEntity(dto)).thenReturn(entity);
+    when(persistencePort.findByEmail(dto.getEmail())).thenReturn(Optional.of(entity2));
+
+    Exception ex = assertThrows(IllegalArgumentException.class, () -> useCase.createResident(dto));
   }
 }

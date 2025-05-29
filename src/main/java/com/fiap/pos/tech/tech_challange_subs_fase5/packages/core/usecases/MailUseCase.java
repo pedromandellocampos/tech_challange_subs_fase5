@@ -6,6 +6,7 @@ import com.fiap.pos.tech.tech_challange_subs_fase5.packages.core.usecases.dto.Ma
 import com.fiap.pos.tech.tech_challange_subs_fase5.packages.core.usecases.ports.input.MailUseCaseInputPort;
 import com.fiap.pos.tech.tech_challange_subs_fase5.packages.core.usecases.ports.output.MailMessageOutputPort;
 import com.fiap.pos.tech.tech_challange_subs_fase5.packages.core.usecases.ports.output.MailPersistenceOutputPort;
+import com.fiap.pos.tech.tech_challange_subs_fase5.resident.core.usecase.ports.input.ResidentUseCaseInputPort;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -18,6 +19,7 @@ public class MailUseCase implements MailUseCaseInputPort {
   MailPersistenceOutputPort mailPersistenceOutputPort;
   MailMapper mailMapper;
   MailMessageOutputPort mailMessageOutputPort;
+  ResidentUseCaseInputPort residentUseCaseInputPort;
 
   @Override
   public List<MailDTO> listMailsByResidentId(Long residentId) {
@@ -42,7 +44,7 @@ public class MailUseCase implements MailUseCaseInputPort {
 
   @Override
   public MailDTO registerMail(MailDTO mailDTO) {
-
+    validateMail(mailMapper.toEntity(mailDTO));
     Mail mail = mailPersistenceOutputPort.save(mailMapper.toEntity(mailDTO));
     MailDTO savedMailDTO = mailMapper.toDto(mail);
     mailMessageOutputPort.sendNotification(savedMailDTO);
@@ -52,6 +54,7 @@ public class MailUseCase implements MailUseCaseInputPort {
   @Override
   public MailDTO updateMail(MailDTO mailDTO) {
     Mail mail =  mailMapper.toEntity(mailDTO);
+    validateMail(mail);
     return mailMapper.toDto(mailPersistenceOutputPort.save(mail));
   }
 
@@ -70,7 +73,9 @@ public class MailUseCase implements MailUseCaseInputPort {
     mailSaved.setAcknowledgmentTimestamp(mail.getAcknowledgmentTimestamp());
     mailSaved.setResidentAcknowledgedById(mail.getResidentAcknowledgedById());
     mailSaved.setReceivedByResident(true);
-    System.out.println(mailSaved.toString());
+
+    validateMail(mailSaved);
+
     return mailMapper.toDto(mailPersistenceOutputPort.save(mailSaved));
   }
 
@@ -88,8 +93,10 @@ public class MailUseCase implements MailUseCaseInputPort {
     Mail mailSaved = mailPersistenceOutputPort.getMailById(mail.getId())
         .orElseThrow(() -> new IllegalArgumentException("Mail not found"));
 
-    mailSaved.setResidentConfirmedMailId(mailDTO.getResidentAcknowledgedById());
-    mailSaved.setReceivedByResident(true);
+    residentUseCaseInputPort.getResidentById(mail.getResidentConfirmedMailId());
+    mailSaved.setResidentConfirmedMailId(mailDTO.getResidentConfirmedMailId());
+    mailSaved.setReceivedByEmail(true);
+    validateMail(mailSaved);
     return mailMapper.toDto(mailPersistenceOutputPort.save(mailSaved));
 
   }
@@ -103,5 +110,19 @@ public class MailUseCase implements MailUseCaseInputPort {
     return mailList.stream()
         .map(mailMapper::toDto)
         .toList();
+  }
+
+
+
+  public void validateMail(Mail mail){
+    if (mail.getResidentAcknowledgedById() != null) {
+      residentUseCaseInputPort.getResidentById(mail.getResidentAcknowledgedById());
+    }
+    if (mail.getResidentRecipientId() != null){
+      residentUseCaseInputPort.getResidentById(mail.getResidentRecipientId());
+    }
+    if(mail.getAcknowledgmentTimestamp() != null){
+      residentUseCaseInputPort.getResidentById(mail.getResidentConfirmedMailId());
+    }
   }
 }
