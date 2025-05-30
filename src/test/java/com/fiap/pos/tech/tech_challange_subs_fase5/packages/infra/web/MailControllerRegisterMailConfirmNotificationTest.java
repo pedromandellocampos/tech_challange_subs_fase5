@@ -100,6 +100,8 @@ class MailControllerRegisterMailConfirmNotificationTest {
       this.loggedResidentId = residentDTO.getId();
     } catch (Exception e) {
       mockMvc.perform(post("/api/v1/residents").content(objectMapper.writeValueAsString(resident)).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isCreated());
+      ResidentDTO residentDTO = residentUseCaseInputPort.getResidentByEmail("email@email.com");
+      this.loggedResidentId = residentDTO.getId();
     }
 
     String loginJson = objectMapper.writeValueAsString(

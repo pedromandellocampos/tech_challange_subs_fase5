@@ -72,6 +72,8 @@ class ResidentControllerDeleteTest {
     } catch (Exception e) {
       mockMvc.perform(post("/api/v1/employees").content(objectMapper.writeValueAsString(employee)).contentType(
         MediaType.APPLICATION_JSON)).andExpect(status().isCreated());
+      EmployeeDTO employeeDTO = employeeUseCaseInputPort.getEmployeeByEmail("funcionario@email.com");
+      this.loggedEmployeeId = employeeDTO.getId();
     }
 
     String loginJson = objectMapper.writeValueAsString(
@@ -122,6 +124,8 @@ class ResidentControllerDeleteTest {
       this.loggedResidentId = residentDTO.getId();
     } catch (Exception e) {
       mockMvc.perform(post("/api/v1/residents").content(objectMapper.writeValueAsString(resident2)).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isCreated());
+      ResidentDTO residentDTO = residentUseCaseInputPort.getResidentByEmail("email2@email.com");
+      this.loggedResidentId = residentDTO.getId();
     }
 
 
