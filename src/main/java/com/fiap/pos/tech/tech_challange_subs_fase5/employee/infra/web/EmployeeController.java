@@ -84,7 +84,7 @@ public class EmployeeController {
 
   @PutMapping("/{id}")
   @Transactional
-  public ResponseEntity<EmployeeDTOToReturn> updateEmployee(@PathVariable(name = "id") Long id, @RequestBody EmployeeUpdateDTO employeeUpdateDTO, Authentication authentication) {
+  public ResponseEntity<EmployeeDTOToReturn> updateEmployee(@PathVariable(name = "id") Long id, @RequestBody @Valid EmployeeUpdateDTO employeeUpdateDTO, Authentication authentication) {
 
     UserDetails userDetails = (EmployeeUserDetailDTO) authentication.getPrincipal();
     EmployeeDTO employee = employeeUseCaseInputPort.getEmployeeByEmail(userDetails.getUsername());
@@ -102,7 +102,14 @@ public class EmployeeController {
 
   @DeleteMapping("/{id}")
   @Transactional
-  public ResponseEntity<Object> deleteEmployee(@PathVariable(name = "id") Long id){
+  public ResponseEntity<Object> deleteEmployee(@PathVariable(name = "id") Long id, Authentication authentication){
+
+    UserDetails userDetails = (EmployeeUserDetailDTO) authentication.getPrincipal();
+    EmployeeDTO employee = employeeUseCaseInputPort.getEmployeeByEmail(userDetails.getUsername());
+    if (!employee.getId().equals(id)) {
+      throw new UnauthorizedException("You can only update your own employee information.");
+    }
+
     employeeUseCaseInputPort.deleteEmployee(id);
     return ResponseEntity.noContent().build();
   }
@@ -120,7 +127,13 @@ public class EmployeeController {
   }
 
   @PutMapping("/change-password/{id}")
-  public ResponseEntity<Object> changePassword(@PathVariable(name = "id") Long id, @RequestBody @Valid ChangePasswordDTO changePasswordDTO) {
+  public ResponseEntity<Object> changePassword(@PathVariable(name = "id") Long id, @RequestBody @Valid ChangePasswordDTO changePasswordDTO, Authentication authentication) {
+
+    UserDetails userDetails = (EmployeeUserDetailDTO) authentication.getPrincipal();
+    EmployeeDTO employee = employeeUseCaseInputPort.getEmployeeByEmail(userDetails.getUsername());
+    if (!employee.getId().equals(id)) {
+      throw new UnauthorizedException("You can only change your own employee password.");
+    }
 
     EmployeeDTO employeeDTO = employeeUseCaseInputPort.changeEmployeePassword(id, passwordEncoder.encode(changePasswordDTO.getNewPassword()));
     EmployeeDTOToReturn employeeDTOToReturn = employeeDTOToReturnMapper.toDto(employeeDTO);

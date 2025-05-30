@@ -63,4 +63,12 @@ public class ResidentPersistenceOutputPortImpl implements ResidentPersistenceOut
   public Optional<Resident> findByPhone(String phone) {
     return Optional.empty();
   }
+
+  @Override
+  public List<Resident> findByUnity(String unity) {
+      return jpaRepository.findByUnity(unity)
+              .stream()
+              .map(residentEntityMapper::toDomain)
+              .collect(Collectors.toList());
+  }
 }

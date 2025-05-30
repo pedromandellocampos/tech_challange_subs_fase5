@@ -5,7 +5,6 @@ import com.fiap.pos.tech.tech_challange_subs_fase5.employee.core.usecases.ports.
 import com.fiap.pos.tech.tech_challange_subs_fase5.employee.infra.web.dto.EmployeeDTORegister;
 import com.fiap.pos.tech.tech_challange_subs_fase5.employee.infra.web.dto.EmployeeLoginDTO;
 import com.fiap.pos.tech.tech_challange_subs_fase5.resident.core.usecase.ports.input.ResidentUseCaseInputPort;
-import com.fiap.pos.tech.tech_challange_subs_fase5.resident.infra.web.dto.ChangePasswordDTO;
 import com.fiap.pos.tech.tech_challange_subs_fase5.resident.infra.web.dto.ResidentDTORegister;
 import com.jayway.jsonpath.JsonPath;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,16 +14,15 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class ResidentControllerChangePasswordTest {
+class ResidentControllerDeleteTest {
+
 
   @Autowired
   private MockMvc mockMvc;
@@ -102,8 +100,24 @@ class ResidentControllerChangePasswordTest {
       mockMvc.perform(post("/api/v1/residents").content(objectMapper.writeValueAsString(resident)).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isCreated());
     }
 
+    ResidentDTORegister resident2 = new ResidentDTORegister();
+    resident2.setName("Morador Teste");
+    resident2.setEmail("email2@email.com");
+    resident2.setPassword("senhaSegura123");
+    resident2.setPhone("11999999999");
+    resident2.setBirthDate("20/05/1997");
+    resident2.setActive(true);
+    resident2.setApartment("101");
+
+    try{
+      residentUseCaseInputPort.getResidentByEmail("email2@email.com");
+    } catch (Exception e) {
+      mockMvc.perform(post("/api/v1/residents").content(objectMapper.writeValueAsString(resident2)).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isCreated());
+    }
+
+
     String loginJson = objectMapper.writeValueAsString(
-      new EmployeeLoginDTO(resident.getEmail(), resident.getPassword())
+      new EmployeeLoginDTO(resident2.getEmail(), resident2.getPassword())
     );
 
     String token = mockMvc.perform(post("/api/v1/residents/login")
@@ -116,31 +130,30 @@ class ResidentControllerChangePasswordTest {
 
     String jwtToken = JsonPath.read(token, "$.token");
     this.residentToken = jwtToken;
+
+
   }
 
-  // Teste para alterar a senha
-  @Test
-  void deveAlterarSenhaComSucesso() throws Exception {
-    ChangePasswordDTO changePasswordDTO = new ChangePasswordDTO("senhaSegura123");
-    String changePasswordJson = objectMapper.writeValueAsString(changePasswordDTO);
 
-    mockMvc.perform(put("/api/v1/residents/change-password/1")
-        .contentType(MediaType.APPLICATION_JSON)
-        .content(changePasswordJson)
-        .header("Authorization", residentToken))
-      .andExpect(status().isOk());
+  @Test
+  void deleteResidentUnauthorized() throws Exception {
+    //teste deleção não autorizada
+    mockMvc.perform(
+            org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete("/api/v1/residents/1")
+                .header("Authorization", this.residentToken)
+        )
+        .andExpect(status().isUnauthorized());
   }
 
-  @Test
-  void deveRetornarBadRequestComCamposInvalidos() throws Exception {
-    ChangePasswordDTO changePasswordDTO = new ChangePasswordDTO("123");
-    String changePasswordJson = objectMapper.writeValueAsString(changePasswordDTO);
 
-    mockMvc.perform(put("/api/v1/residents/change-password/1")
-        .contentType(MediaType.APPLICATION_JSON)
-        .content(changePasswordJson)
-        .header("Authorization", residentToken))
-      .andExpect(status().isBadRequest());
+  //teste deleção sucesso
+  @Test
+  void deleteResidentSuccess() throws Exception {
+    mockMvc.perform(
+            org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete("/api/v1/residents/2")
+                .header("Authorization", this.residentToken)
+        )
+        .andExpect(status().isNoContent());
   }
 
 }

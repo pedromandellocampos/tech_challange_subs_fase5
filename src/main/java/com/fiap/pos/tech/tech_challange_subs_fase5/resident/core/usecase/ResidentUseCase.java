@@ -132,5 +132,10 @@ public class ResidentUseCase implements ResidentUseCaseInputPort {
     }
   }
 
+  public List<ResidentDTO> getResidentByUnity(String unity) {
+    List<Resident> resident = residentPersistenceOutputPort.findByUnity(unity);
+    return resident.stream().map(residentMapper::toDto).toList();
+  }
+
 
 }

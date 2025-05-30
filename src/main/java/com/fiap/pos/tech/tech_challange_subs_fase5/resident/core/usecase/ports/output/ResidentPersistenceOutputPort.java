@@ -14,5 +14,6 @@ public interface ResidentPersistenceOutputPort {
   Optional<Resident> findById(Long id);
   Optional<Resident> findByEmail(String email);
   Optional<Resident> findByPhone(String phone);
+  List<Resident> findByUnity(String unity);
 
 }

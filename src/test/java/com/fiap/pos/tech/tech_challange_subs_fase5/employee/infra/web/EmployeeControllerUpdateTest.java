@@ -1,30 +1,32 @@
-package com.fiap.pos.tech.tech_challange_subs_fase5.resident.infra.web;
+package com.fiap.pos.tech.tech_challange_subs_fase5.employee.infra.web;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fiap.pos.tech.tech_challange_subs_fase5.employee.core.usecases.ports.input.EmployeeUseCaseInputPort;
 import com.fiap.pos.tech.tech_challange_subs_fase5.employee.infra.web.dto.EmployeeDTORegister;
 import com.fiap.pos.tech.tech_challange_subs_fase5.employee.infra.web.dto.EmployeeLoginDTO;
+import com.fiap.pos.tech.tech_challange_subs_fase5.employee.infra.web.dto.EmployeeUpdateDTO;
 import com.fiap.pos.tech.tech_challange_subs_fase5.resident.core.usecase.ports.input.ResidentUseCaseInputPort;
-import com.fiap.pos.tech.tech_challange_subs_fase5.resident.infra.web.dto.ChangePasswordDTO;
 import com.fiap.pos.tech.tech_challange_subs_fase5.resident.infra.web.dto.ResidentDTORegister;
 import com.jayway.jsonpath.JsonPath;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class ResidentControllerChangePasswordTest {
+class EmployeeControllerUpdateTest {
+
 
   @Autowired
   private MockMvc mockMvc;
@@ -62,6 +64,7 @@ class ResidentControllerChangePasswordTest {
     employee.setPhone("11999999999");
     employee.setDateOfBirth("20/05/1997");
     employee.setHireDate("20/05/1997");
+
     try{
       employeeUseCaseInputPort.getEmployeeByEmail("funcionario@email.com");
     } catch (Exception e) {
@@ -118,29 +121,59 @@ class ResidentControllerChangePasswordTest {
     this.residentToken = jwtToken;
   }
 
-  // Teste para alterar a senha
   @Test
-  void deveAlterarSenhaComSucesso() throws Exception {
-    ChangePasswordDTO changePasswordDTO = new ChangePasswordDTO("senhaSegura123");
-    String changePasswordJson = objectMapper.writeValueAsString(changePasswordDTO);
+  void deveAtualizarFuncionarioComSucesso() throws Exception {
+    EmployeeUpdateDTO dto = new EmployeeUpdateDTO();
+    dto.setName("Funcionário Atualizado");
+    dto.setPhone("11988888888");
+    dto.setEmail("funcionario@email.com");
+    dto.setHireDate("20/05/1997");
+    dto.setDateOfBirth("20/05/1997");
+    dto.setActive(true);
 
-    mockMvc.perform(put("/api/v1/residents/change-password/1")
+    Long employeeId = employeeUseCaseInputPort.getEmployeeByEmail("funcionario@email.com").getId();
+
+    mockMvc.perform(put("/api/v1/employees/{id}", employeeId)
         .contentType(MediaType.APPLICATION_JSON)
-        .content(changePasswordJson)
-        .header("Authorization", residentToken))
-      .andExpect(status().isOk());
+        .content(objectMapper.writeValueAsString(dto))
+        .header("Authorization", employeeToken))
+      .andExpect(status().isOk())
+      .andExpect(jsonPath("$.id").value(employeeId));
   }
 
   @Test
-  void deveRetornarBadRequestComCamposInvalidos() throws Exception {
-    ChangePasswordDTO changePasswordDTO = new ChangePasswordDTO("123");
-    String changePasswordJson = objectMapper.writeValueAsString(changePasswordDTO);
+  void deveRetornarForbidenAoResidentAtualizarFuncionario() throws Exception {
+    EmployeeUpdateDTO dto = new EmployeeUpdateDTO();
+    dto.setName("Outro Funcionário");
+    dto.setPhone("11988888888");
+    dto.setActive(true);
 
-    mockMvc.perform(put("/api/v1/residents/change-password/1")
+    // Tenta atualizar o funcionário com o token de residente (não autorizado)
+    Long employeeId = employeeUseCaseInputPort.getEmployeeByEmail("funcionario@email.com").getId();
+
+    mockMvc.perform(put("/api/v1/employees/{id}", employeeId)
         .contentType(MediaType.APPLICATION_JSON)
-        .content(changePasswordJson)
+        .content(objectMapper.writeValueAsString(dto))
         .header("Authorization", residentToken))
+      .andExpect(status().isForbidden());
+  }
+
+  @Test
+  void deveRetornarBadRequestParaDadosInvalidos() throws Exception {
+    EmployeeUpdateDTO dto = new EmployeeUpdateDTO();
+    // Não preenche campos obrigatórios
+
+    Long employeeId = employeeUseCaseInputPort.getEmployeeByEmail("funcionario@email.com").getId();
+
+    mockMvc.perform(put("/api/v1/employees/{id}", employeeId)
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(objectMapper.writeValueAsString(dto))
+        .header("Authorization", employeeToken))
       .andExpect(status().isBadRequest());
   }
+
+
+
+
 
 }

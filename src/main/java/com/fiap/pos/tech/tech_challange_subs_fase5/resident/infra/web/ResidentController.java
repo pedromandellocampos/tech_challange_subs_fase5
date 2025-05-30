@@ -75,7 +75,16 @@ public class ResidentController {
   }
 
   @DeleteMapping("/{id}")
-  public ResponseEntity<Object> deleteResident(@PathVariable Integer id) {
+  public ResponseEntity<Object> deleteResident(@PathVariable Long id, Authentication authentication) {
+
+    UserDetails userDetails = (ResidentUserDetailDTO) authentication.getPrincipal();
+
+    var resident = residentUseCaseInputPort.getResidentByEmail(userDetails.getUsername());
+    System.out.println("AQUI RESIDENT --> " + resident);
+    if (!resident.getId().equals(id)) {
+      throw new UnauthorizedException("You can only delete your own resident account.");
+    }
+
     residentUseCaseInputPort.deleteResident(id.longValue());
 
     return ResponseEntity.noContent().build();

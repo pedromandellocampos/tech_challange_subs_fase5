@@ -1,4 +1,4 @@
-package com.fiap.pos.tech.tech_challange_subs_fase5.packages.infra.message.output;
+package com.fiap.pos.tech.tech_challange_subs_fase5.notification.infra.message.output;
 
 import com.fiap.pos.tech.tech_challange_subs_fase5.packages.core.usecases.dto.MailDTO;
 import com.fiap.pos.tech.tech_challange_subs_fase5.packages.core.usecases.ports.output.MailMessageOutputPort;
@@ -10,13 +10,13 @@ import org.springframework.stereotype.Component;
 @Component
 @Data
 @AllArgsConstructor
-public class MailMessageOutputPortImpl implements MailMessageOutputPort {
+public class MailMessageOutputOutputPortImpl implements MailMessageOutputPort {
 
   private KafkaTemplate<String, String> kafkaTemplate;
 
   @Override
   public void sendNotification(MailDTO mailDTO) {
-    kafkaTemplate.send("tech_challange_subs_fase5-input", mailDTO.toString());
+    kafkaTemplate.send("tech_challange_subs_fase5-output", mailDTO.toString());
   }
 
 }

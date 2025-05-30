@@ -3,6 +3,7 @@ package com.fiap.pos.tech.tech_challange_subs_fase5.resident.infra.repository.re
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -11,5 +12,6 @@ public interface ResidentJPARepository extends JpaRepository<ResidentEntity, Lon
   @Override
   Optional<ResidentEntity> findById(Long aLong);
   Optional<ResidentEntity> findByEmail(String email);
+  List<ResidentEntity> findByUnity(String unity);
 
 }

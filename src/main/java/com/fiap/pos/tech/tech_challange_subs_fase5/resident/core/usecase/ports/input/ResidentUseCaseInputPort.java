@@ -15,6 +15,7 @@ public interface ResidentUseCaseInputPort {
   boolean deleteResident(Long id);
   ResidentDTO inactivateResident(Long id);
   ResidentDTO changeResidentPassword(Long id, String newPassword);
+  List<ResidentDTO> getResidentByUnity(String unity);
 
 
 }
