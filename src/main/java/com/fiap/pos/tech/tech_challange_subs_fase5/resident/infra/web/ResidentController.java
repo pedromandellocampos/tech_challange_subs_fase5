@@ -6,6 +6,8 @@ import com.fiap.pos.tech.tech_challange_subs_fase5.resident.core.usecase.dto.Res
 import com.fiap.pos.tech.tech_challange_subs_fase5.resident.core.usecase.ports.input.ResidentUseCaseInputPort;
 import com.fiap.pos.tech.tech_challange_subs_fase5.resident.infra.security.dto.ResidentUserDetailDTO;
 import com.fiap.pos.tech.tech_challange_subs_fase5.resident.infra.web.dto.*;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +16,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -34,6 +37,12 @@ public class ResidentController {
   JwtHandler jwtHandler;
 
   @PostMapping
+  @Transactional
+  @Operation(
+      summary = "Create a new resident",
+      description = "This endpoint allows you to create a new resident in the system. The password will be encoded before saving."
+     , security = @SecurityRequirement(name = "")
+  )
   public ResponseEntity<ResidentDTOToReturn> createResident(@RequestBody ResidentDTORegister residentDTORegister) {
     ResidentDTO residentDTO = residentDTORegisterMapper.toEntity(residentDTORegister);
     residentDTO.setPassword(passwordEncoder.encode(residentDTO.getPassword()));
@@ -45,6 +54,11 @@ public class ResidentController {
   }
 
   @PutMapping("/{id}")
+  @Transactional
+  @Operation(
+      summary = "Update resident information",
+      description = "This endpoint allows you to update your own resident information. You can only update your own account."
+  )
   public ResponseEntity<ResidentDTOToReturn> updateResident(@RequestBody @Valid ResidentUpdateDTO residentUpdateDTO, @PathVariable Long id, Authentication authentication) {
 
     UserDetails userDetails = (ResidentUserDetailDTO) authentication.getPrincipal();
@@ -61,6 +75,11 @@ public class ResidentController {
   }
 
   @GetMapping("/{id}")
+  @Transactional(readOnly = true)
+  @Operation(
+      summary = "Get resident by ID",
+      description = "This endpoint retrieves a resident's details by their ID."
+  )
   public ResponseEntity<ResidentDTOToReturn> getResident(@PathVariable Long id){
     ResidentDTO residentDTO = residentUseCaseInputPort.getResidentById(id);
     ResidentDTOToReturn residentDTOToReturn = residentDTOToReturnMapper.toDto(residentDTO);
@@ -69,12 +88,22 @@ public class ResidentController {
   }
 
   @GetMapping()
+  @Transactional(readOnly = true)
+  @Operation(
+      summary = "List all residents",
+      description = "This endpoint retrieves a paginated list of all residents."
+  )
   public ResponseEntity<List<ResidentDTOToReturn>> getAllResidents(@RequestParam(required = false) int page, @RequestParam(required = false) int size) {
     List<ResidentDTO> residentDTOList = residentUseCaseInputPort.listAllResidents(page, size);
     return ResponseEntity.ok(residentDTOList.stream().map(residentDTOToReturnMapper::toDto).collect(Collectors.toList()));
   }
 
   @DeleteMapping("/{id}")
+  @Transactional
+  @Operation(
+      summary = "Delete a resident",
+      description = "This endpoint allows you to delete your own resident account. You can only delete your own account."
+  )
   public ResponseEntity<Object> deleteResident(@PathVariable Long id, Authentication authentication) {
 
     UserDetails userDetails = (ResidentUserDetailDTO) authentication.getPrincipal();
@@ -91,6 +120,11 @@ public class ResidentController {
   }
 
   @PostMapping("/login")
+  @Transactional(readOnly = true)
+  @Operation(
+      summary = "Resident login",
+      description = "This endpoint allows a resident to log in and receive a JWT token."
+  )
   public ResponseEntity<TokenReturnDTO> login(@RequestBody @Valid ResidentLoginDTO residentLoginDTO) {
 
     var userNamePassword = new UsernamePasswordAuthenticationToken(residentLoginDTO.getEmail(), residentLoginDTO.getPassword());
@@ -101,6 +135,13 @@ public class ResidentController {
   }
 
   @PutMapping("/change-password/{id}")
+  @Transactional
+  @Operation(
+      summary = "Change resident password",
+      description = "This endpoint allows a resident to change their own password. You can only change your own password.",
+    security =
+    @SecurityRequirement(name = "")
+  )
   public ResponseEntity<Object> changePassword(@PathVariable(name = "id") Long id, @RequestBody @Valid ChangePasswordDTO changePasswordDTO, Authentication authentication) {
 
     UserDetails userDetails = (ResidentUserDetailDTO) authentication.getPrincipal();
