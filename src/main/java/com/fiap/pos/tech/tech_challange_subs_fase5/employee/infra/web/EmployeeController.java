@@ -80,6 +80,23 @@ public class EmployeeController {
     return ResponseEntity.ok().body(employeeDTOToReturn);
   }
 
+  @GetMapping("/my-account")
+  @Transactional(readOnly = true)
+  @Operation(
+      summary = "Get authenticated employee's account",
+      description = "This endpoint retrieves the details of the authenticated employee's account.",
+    security =
+    @SecurityRequirement(name = "jwtToken")
+  )
+  public ResponseEntity<EmployeeDTOToReturn> getMyAccount(Authentication authentication) {
+
+    UserDetails userDetails = (EmployeeUserDetailDTO) authentication.getPrincipal();
+    EmployeeDTO employeeDTO = employeeUseCaseInputPort.getEmployeeByEmail(userDetails.getUsername());
+    EmployeeDTOToReturn employeeDTOToReturn = employeeDTOToReturnMapper.toDto(employeeDTO);
+
+    return ResponseEntity.ok().body(employeeDTOToReturn);
+  }
+
   @GetMapping
   @Transactional(readOnly = true)
   @Operation(

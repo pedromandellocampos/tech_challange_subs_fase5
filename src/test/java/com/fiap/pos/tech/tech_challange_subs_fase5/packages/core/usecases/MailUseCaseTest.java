@@ -5,6 +5,7 @@ import com.fiap.pos.tech.tech_challange_subs_fase5.packages.core.usecases.dto.Ma
 import com.fiap.pos.tech.tech_challange_subs_fase5.packages.core.usecases.dto.MailMapper;
 import com.fiap.pos.tech.tech_challange_subs_fase5.packages.core.usecases.ports.output.MailMessageOutputPort;
 import com.fiap.pos.tech.tech_challange_subs_fase5.packages.core.usecases.ports.output.MailPersistenceOutputPort;
+import com.fiap.pos.tech.tech_challange_subs_fase5.resident.core.usecase.dto.ResidentDTO;
 import com.fiap.pos.tech.tech_challange_subs_fase5.resident.core.usecase.ports.input.ResidentUseCaseInputPort;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -46,6 +47,16 @@ class MailUseCaseReceiveEmailTest {
     when(persistencePort.getMailById(1L)).thenReturn(Optional.of(inputMail));
     when(persistencePort.save(any(Mail.class))).thenReturn(savedMail);
     when(mapper.toDto(savedMail)).thenReturn(outputDTO);
+    when(residentUseCaseInputPort.getResidentById(anyLong())).thenReturn(new ResidentDTO(
+      1L,
+      "Nome do Morador",
+      "email@exemplo.com",
+      "senha123",
+      "11999999999",
+      "101",
+      LocalDate.of(1997, 5, 20),
+      true
+    ));
 
     MailDTO result = useCase.receiveMail(inputDTO);
 

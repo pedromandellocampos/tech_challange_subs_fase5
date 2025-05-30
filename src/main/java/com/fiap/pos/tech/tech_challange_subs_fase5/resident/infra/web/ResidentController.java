@@ -90,6 +90,23 @@ public class ResidentController {
     return ResponseEntity.ok(residentDTOToReturn);
   }
 
+  @GetMapping("/my-account")
+  @Transactional(readOnly = true)
+  @Operation(
+      summary = "Get current resident account",
+      description = "This endpoint retrieves the current resident's account details.",
+    security =
+    @SecurityRequirement(name = "jwtToken")
+  )
+  public ResponseEntity<ResidentDTOToReturn> getMyAccount(Authentication authentication) {
+
+    UserDetails userDetails = (ResidentUserDetailDTO) authentication.getPrincipal();
+    ResidentDTO residentDTO = residentUseCaseInputPort.getResidentByEmail(userDetails.getUsername());
+    ResidentDTOToReturn residentDTOToReturn = residentDTOToReturnMapper.toDto(residentDTO);
+
+    return ResponseEntity.ok(residentDTOToReturn);
+  }
+
   @GetMapping()
   @Transactional(readOnly = true)
   @Operation(

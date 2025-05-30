@@ -6,6 +6,7 @@ import com.fiap.pos.tech.tech_challange_subs_fase5.packages.core.usecases.dto.Ma
 import com.fiap.pos.tech.tech_challange_subs_fase5.packages.core.usecases.ports.input.MailUseCaseInputPort;
 import com.fiap.pos.tech.tech_challange_subs_fase5.packages.core.usecases.ports.output.MailMessageOutputPort;
 import com.fiap.pos.tech.tech_challange_subs_fase5.packages.core.usecases.ports.output.MailPersistenceOutputPort;
+import com.fiap.pos.tech.tech_challange_subs_fase5.resident.core.usecase.dto.ResidentDTO;
 import com.fiap.pos.tech.tech_challange_subs_fase5.resident.core.usecase.ports.input.ResidentUseCaseInputPort;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -71,6 +72,13 @@ public class MailUseCase implements MailUseCaseInputPort {
     Mail mail =  mailMapper.toEntity(mailDTO);
     Mail mailSaved = mailPersistenceOutputPort.getMailById(mail.getId())
         .orElseThrow(() -> new IllegalArgumentException("Mail not found"));
+
+    ResidentDTO residentDTO = residentUseCaseInputPort.getResidentById(mail.getResidentAcknowledgedById());
+
+
+    if(!residentDTO.getApartment().equals(mailSaved.getUnity())){
+      throw new IllegalArgumentException("Resident does not belong to the unity specified as a receiver for the mail");
+    }
 
     mailSaved.setAcknowledgmentTimestamp(mail.getAcknowledgmentTimestamp());
     mailSaved.setResidentAcknowledgedById(mail.getResidentAcknowledgedById());

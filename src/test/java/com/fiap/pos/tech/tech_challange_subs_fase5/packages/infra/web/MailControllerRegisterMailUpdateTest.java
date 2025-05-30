@@ -6,6 +6,7 @@ import com.fiap.pos.tech.tech_challange_subs_fase5.employee.infra.web.dto.Employ
 import com.fiap.pos.tech.tech_challange_subs_fase5.employee.infra.web.dto.EmployeeLoginDTO;
 import com.fiap.pos.tech.tech_challange_subs_fase5.packages.infra.web.dto.CreateMailDTO;
 import com.fiap.pos.tech.tech_challange_subs_fase5.packages.infra.web.dto.UpdateMailDTO;
+import com.fiap.pos.tech.tech_challange_subs_fase5.resident.core.usecase.dto.ResidentDTO;
 import com.fiap.pos.tech.tech_challange_subs_fase5.resident.core.usecase.ports.input.ResidentUseCaseInputPort;
 import com.fiap.pos.tech.tech_challange_subs_fase5.resident.infra.web.dto.ResidentDTORegister;
 import com.jayway.jsonpath.JsonPath;
@@ -35,6 +36,8 @@ class MailControllerRegisterMailUpdateTest {
 
   private String employeeToken;
   private String residentToken;
+
+  private Long residentId;
   @Autowired
   private ResidentUseCaseInputPort residentUseCaseInputPort;
 
@@ -94,9 +97,12 @@ class MailControllerRegisterMailUpdateTest {
     resident.setApartment("101");
 
     try{
-      residentUseCaseInputPort.getResidentByEmail("email@email.com");
+      ResidentDTO residentDTO = residentUseCaseInputPort.getResidentByEmail("email@email.com");
+      this.residentId = residentDTO.getId();
     } catch (Exception e) {
       mockMvc.perform(post("/api/v1/residents").content(objectMapper.writeValueAsString(resident)).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isCreated());
+      ResidentDTO residentDTO = residentUseCaseInputPort.getResidentByEmail("email@email.com");
+      this.residentId = residentDTO.getId();
     }
 
     String loginJson = objectMapper.writeValueAsString(
@@ -138,7 +144,7 @@ class MailControllerRegisterMailUpdateTest {
     Integer mailId = JsonPath.read(response, "$.id");
 
     UpdateMailDTO updateMailDTO = new UpdateMailDTO(
-      1L, // residentAcknowledgedById
+      this.residentId, // residentAcknowledgedById
       "21/05/2024", // acknowledgmentTimestamp (formato dd/MM/yyyy)
       true // receivedByResident
     );
