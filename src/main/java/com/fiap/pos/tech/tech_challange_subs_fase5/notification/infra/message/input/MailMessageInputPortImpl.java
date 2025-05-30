@@ -13,15 +13,13 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class MailMessageInputPortImpl {
 
-  NotificationMailUseCaseInputPort notificationMailUseCaseInputPort;
-  ObjectMapper mapper = new ObjectMapper();
+  private NotificationMailUseCaseInputPort notificationMailUseCaseInputPort;
+  private ObjectMapper mapper = new ObjectMapper();
 
   @KafkaListener(topics = "tech_challange_subs_fase5-input", groupId = "notification-group", containerFactory = "mailKafkaListenerContainerFactory")
   public void receiveMailMessage(MailDTO mailDTO) throws Exception {
 
-    System.out.println("MENSAGEM RECEBIDA: " + mailDTO);
     notificationMailUseCaseInputPort.processNotification(mailDTO);
-    System.out.println("Mensagem recebida no tópico mail-topic: " + mailDTO);
   }
 
 

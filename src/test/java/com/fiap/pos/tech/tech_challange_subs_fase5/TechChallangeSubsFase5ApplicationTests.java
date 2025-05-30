@@ -11,7 +11,6 @@ class TechChallangeSubsFase5ApplicationTests {
   @Test
   void contextLoads() {
     var modules = ApplicationModules.of(TechChallangeSubsFase5Application.class);
-    System.out.println(modules);
   }
 
 }

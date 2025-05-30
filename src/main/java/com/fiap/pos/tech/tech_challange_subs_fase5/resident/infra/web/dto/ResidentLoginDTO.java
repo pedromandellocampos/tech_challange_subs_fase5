@@ -19,10 +19,10 @@ public class ResidentLoginDTO {
     @Schema(
         description = "Email of the resident",
         example = "tex.mattina@email.com", requiredMode = Schema.RequiredMode.REQUIRED)
-  String email;
+  private String email;
   @NotBlank(message = "Password cannot be blank")
     @Schema(
         description = "Password for the resident account",
         example = "securePassword123", requiredMode = Schema.RequiredMode.REQUIRED)
-  String password;
+  private String password;
 }

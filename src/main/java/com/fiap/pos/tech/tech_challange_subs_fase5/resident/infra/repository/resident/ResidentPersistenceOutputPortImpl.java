@@ -17,8 +17,8 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class ResidentPersistenceOutputPortImpl implements ResidentPersistenceOutputPort {
 
-  ResidentEntityMapper residentEntityMapper;
-  ResidentJPARepository jpaRepository;
+  private ResidentEntityMapper residentEntityMapper;
+  private ResidentJPARepository jpaRepository;
 
   @Override
   public Resident save(Resident Resident) {

@@ -46,8 +46,6 @@ public class NotificationUseCase implements NotificationMailUseCaseInputPort {
         mailMessageOutputOutputPort.sendNotification(notificationDTOToSend);
         messageServiceOutputPort.sendMessageToUser(notificationDTOToSend);
       }
-    } else {
-      System.out.println("No residents found for the specified unity: " + unity);
     }
   }
 

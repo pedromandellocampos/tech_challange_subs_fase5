@@ -139,7 +139,6 @@ class MailControllerRegisterMailConfirmNotificationTest {
       .getContentAsString();
 
     Integer mailId = JsonPath.read(response, "$.id");
-    System.out.println("ID ---> " + mailId);
 
     mockMvc.perform(put("/api/v1/mail/confirm-notification/" +  mailId)
         .header("Authorization", residentToken))

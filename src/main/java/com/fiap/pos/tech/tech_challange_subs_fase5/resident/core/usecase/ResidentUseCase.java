@@ -18,8 +18,8 @@ import java.util.stream.Collectors;
 public class ResidentUseCase implements ResidentUseCaseInputPort {
 
 
-  ResidentPersistenceOutputPort residentPersistenceOutputPort;
-  ResidentMapper residentMapper;
+  private ResidentPersistenceOutputPort residentPersistenceOutputPort;
+  private ResidentMapper residentMapper;
 
 
   @Override
@@ -34,7 +34,6 @@ public class ResidentUseCase implements ResidentUseCaseInputPort {
       throw new IllegalArgumentException("Phone cannot be null or empty");
     }
 
-    System.out.println("ResidentDTO -->> " + ResidentDTO);
     validateResident(resident);
     return residentMapper.toDto(residentPersistenceOutputPort.save(resident));
   }
@@ -121,9 +120,7 @@ public class ResidentUseCase implements ResidentUseCaseInputPort {
 
 
   public void validateResident(Resident resident) {
-    System.out.println("Email cannot be null or empty aQUIIII2F");
     if (resident.getEmail() == null || resident.getEmail().isEmpty()) {
-      System.out.println("Email cannot be null or empty aQUIIII");
       throw new IllegalArgumentException("Email cannot be null or empty");
     } else {
         Resident residentEmail = residentPersistenceOutputPort.findByEmail(resident.getEmail()).orElse(null);

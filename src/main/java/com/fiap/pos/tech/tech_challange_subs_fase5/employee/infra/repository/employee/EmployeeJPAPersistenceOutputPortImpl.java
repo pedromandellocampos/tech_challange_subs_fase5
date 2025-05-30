@@ -19,8 +19,8 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class EmployeeJPAPersistenceOutputPortImpl implements EmployeePersistenceOutputPort {
 
-  EmployeeJPARepository employeeJPARepository;
-  EmployeeJPAEntityMapper employeeJPAEntityMapper;
+  private EmployeeJPARepository employeeJPARepository;
+  private EmployeeJPAEntityMapper employeeJPAEntityMapper;
 
   @Override
   public Employee save(Employee employee) {

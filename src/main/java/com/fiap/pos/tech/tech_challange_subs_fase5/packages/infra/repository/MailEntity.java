@@ -19,20 +19,20 @@ public class MailEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  Long id;
-  String description;
+  private Long id;
+  private String description;
 
-  String deliveryIssuerName;
-  Long employeeRecipientId;
-  Long residentRecipientId;
-  LocalDate deliveryTimestamp;
+  private String deliveryIssuerName;
+  private Long employeeRecipientId;
+  private Long residentRecipientId;
+  private LocalDate deliveryTimestamp;
 
-  String unity;
+  private String unity;
 
-  Long residentAcknowledgedById;
-  LocalDate acknowledgmentTimestamp;
+  private Long residentAcknowledgedById;
+  private LocalDate acknowledgmentTimestamp;
 
-  boolean receivedByResident;
+  private boolean receivedByResident;
 
   Long residentConfirmedMailId;
   boolean receivedByEmail;

@@ -26,19 +26,17 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class SecurityFilter extends OncePerRequestFilter {
 
-  JwtHandler jwtHandler;
-  UserDetailsService authorizationService;
+  private JwtHandler jwtHandler;
+  private UserDetailsService authorizationService;
 
   @Override
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
     try{
       String token = this.recoverToken(request);
       if(token != null){
-        System.out.println("Aqui dentro valida token: " + token);
         String login = jwtHandler.validateToken(token);
         logger.info("Aqui dentro valida login: " + login);
         UserDetails userDetails = authorizationService.loadUserByUsername(login);
-        System.out.println("Aqui dentro valida userDetails: " + userDetails.getUsername());
 
         List<String> roles = jwtHandler.getRoles(token);
         List<GrantedAuthority> authorities = roles.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
@@ -46,7 +44,6 @@ public class SecurityFilter extends OncePerRequestFilter {
         var authentication = new UsernamePasswordAuthenticationToken(userDetails, null, authorities);
         SecurityContextHolder.getContext().setAuthentication(authentication);
       }
-      System.out.println("a1ui12322");
 
       filterChain.doFilter(request, response);
     } catch(IllegalArgumentException e){

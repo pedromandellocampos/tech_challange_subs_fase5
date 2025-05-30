@@ -48,8 +48,6 @@ class EmployeeControllerChangePasswordTest {
       createAndLoginEmployee();
       createAndLoginResident();
     } catch (Exception e) {
-      System.out.println(e.getMessage());
-      System.out.println("AQUI 123 321");
     }
   }
 
@@ -65,7 +63,6 @@ class EmployeeControllerChangePasswordTest {
     employee.setHireDate("20/05/1997");
     try{
       EmployeeDTO employeeDTO = employeeUseCaseInputPort.getEmployeeByEmail("funcionario@email.com");
-      System.out.println("AQUI EMPLOYEE -> " + employeeDTO);
       this.loggedEmployeeId = employeeDTO.getId();
     } catch (Exception e) {
        mockMvc.perform(post("/api/v1/employees").content(objectMapper.writeValueAsString(employee)).contentType(

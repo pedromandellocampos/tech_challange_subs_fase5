@@ -19,10 +19,10 @@ public class NotificationEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  Long id;
-  String email;
-  Long mailID;
-  String message;
-  LocalDateTime messageDeliveryTimestamp;
+  private Long id;
+  private String email;
+  private Long mailID;
+  private String message;
+  private LocalDateTime messageDeliveryTimestamp;
 
 }

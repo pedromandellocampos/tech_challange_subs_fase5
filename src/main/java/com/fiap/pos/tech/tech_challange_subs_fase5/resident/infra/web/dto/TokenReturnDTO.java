@@ -7,5 +7,5 @@ import lombok.Data;
 @AllArgsConstructor
 public class TokenReturnDTO {
 
-  String token;
+  private String token;
 }

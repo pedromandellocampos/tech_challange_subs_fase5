@@ -16,10 +16,10 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 public class AuthorizationService implements UserDetailsService {
 
-  EmployeeUseCaseInputPort employeeUseCaseInputPort;
-  EmployeeUserDetailDTOMapper employeeUserDetailDTOMapper;
-  ResidentUseCaseInputPort residentUseCaseInputPort;
-  ResidentUserDetailDTOMapper residentUserDetailDTOMapper;
+  private EmployeeUseCaseInputPort employeeUseCaseInputPort;
+  private EmployeeUserDetailDTOMapper employeeUserDetailDTOMapper;
+  private ResidentUseCaseInputPort residentUseCaseInputPort;
+  private ResidentUserDetailDTOMapper residentUserDetailDTOMapper;
 
   @Override
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

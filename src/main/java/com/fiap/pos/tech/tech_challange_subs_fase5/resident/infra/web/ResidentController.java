@@ -28,13 +28,13 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class ResidentController {
 
-  private final ResidentUpdateDTOMapper residentUpdateDTOMapper;
-  ResidentDTORegisterMapper residentDTORegisterMapper;
-  ResidentDTOToReturnMapper residentDTOToReturnMapper;
-  ResidentUseCaseInputPort residentUseCaseInputPort;
-  AuthenticationManager authenticationManager;
-  PasswordEncoder passwordEncoder;
-  JwtHandler jwtHandler;
+  private ResidentUpdateDTOMapper residentUpdateDTOMapper;
+  private ResidentDTORegisterMapper residentDTORegisterMapper;
+  private ResidentDTOToReturnMapper residentDTOToReturnMapper;
+  private ResidentUseCaseInputPort residentUseCaseInputPort;
+  private AuthenticationManager authenticationManager;
+  private PasswordEncoder passwordEncoder;
+  private JwtHandler jwtHandler;
 
   @PostMapping
   @Operation(
@@ -116,7 +116,6 @@ public class ResidentController {
     UserDetails userDetails = (ResidentUserDetailDTO) authentication.getPrincipal();
 
     var resident = residentUseCaseInputPort.getResidentByEmail(userDetails.getUsername());
-    System.out.println("AQUI RESIDENT --> " + resident);
     if (!resident.getId().equals(id)) {
       throw new UnauthorizedException("You can only delete your own resident account.");
     }

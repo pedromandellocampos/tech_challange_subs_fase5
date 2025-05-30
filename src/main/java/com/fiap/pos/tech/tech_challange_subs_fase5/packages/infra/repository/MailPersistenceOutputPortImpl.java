@@ -16,8 +16,8 @@ import java.util.Optional;
 @AllArgsConstructor
 public class MailPersistenceOutputPortImpl implements MailPersistenceOutputPort {
 
-  MailEntityMapper mailEntityMapper;
-  MailJPARepository mailJPARepository;
+  private MailEntityMapper mailEntityMapper;
+  private MailJPARepository mailJPARepository;
 
   @Override
   public List<Mail> listMailsByResidentId(Long residentId) {

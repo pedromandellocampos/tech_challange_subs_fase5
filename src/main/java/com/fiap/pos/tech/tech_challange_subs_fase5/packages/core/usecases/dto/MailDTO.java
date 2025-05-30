@@ -9,22 +9,22 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class MailDTO {
 
-  Long id;
-  String description;
+  private Long id;
+  private String description;
 
-  String deliveryIssuerName;
-  Long employeeRecipientId;
-  Long residentRecipientId;
-  String deliveryTimestamp;
+  private String deliveryIssuerName;
+  private Long employeeRecipientId;
+  private Long residentRecipientId;
+  private String deliveryTimestamp;
 
-  String unity;
+  private String unity;
 
-  Long residentAcknowledgedById;
-  String acknowledgmentTimestamp;
+  private Long residentAcknowledgedById;
+  private String acknowledgmentTimestamp;
 
-  boolean receivedByResident;
+  private boolean receivedByResident;
 
-  Long residentConfirmedMailId;
-  boolean receivedByEmail;
+  private Long residentConfirmedMailId;
+  private boolean receivedByEmail;
 
 }

@@ -121,9 +121,7 @@ public class EmployeeUseCase implements EmployeeUseCaseInputPort {
 
 
   public void validateEmployee(Employee employee) {
-    System.out.println("Email cannot be null or empty aQUIIII2F");
     if (employee.getEmail() == null || employee.getEmail().isEmpty()) {
-      System.out.println("Email cannot be null or empty aQUIIII");
       throw new IllegalArgumentException("Email cannot be null or empty");
     } else {
       Employee residentEmail = employeePersistenceOutputPort.findByEmail(employee.getEmail()).orElse(null);

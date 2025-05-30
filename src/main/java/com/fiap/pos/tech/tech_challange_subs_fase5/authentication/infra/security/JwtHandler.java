@@ -81,7 +81,6 @@ public class JwtHandler {
 
       List<String> roles = Arrays.asList(role.split(","));
 
-      System.out.println("Aqui dentro valida roles: " + role);
       return roles;
     } catch (JWTVerificationException exception){
       return List.of();

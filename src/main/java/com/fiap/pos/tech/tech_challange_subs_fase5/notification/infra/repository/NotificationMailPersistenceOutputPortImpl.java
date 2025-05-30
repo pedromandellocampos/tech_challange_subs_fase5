@@ -14,15 +14,13 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class NotificationMailPersistenceOutputPortImpl implements NotificationMailPersistenceOutputPort {
 
-  NotificationEntityMapper notificationEntityMapper;
-  NotificationEntityJPARepository notificationEntityJPARepository;
+  private NotificationEntityMapper notificationEntityMapper;
+  private NotificationEntityJPARepository notificationEntityJPARepository;
 
   @Override
   public Notification save(Notification notificationDTO) {
 
-    System.out.println("AQUIII " + notificationDTO);
     NotificationEntity notificationEntity = notificationEntityMapper.toEntity(notificationDTO);
-    System.out.println("AQUIII ENTITY 123" + notificationEntity);
    return notificationEntityMapper.toDTO(notificationEntityJPARepository.save(notificationEntity));
   }
 

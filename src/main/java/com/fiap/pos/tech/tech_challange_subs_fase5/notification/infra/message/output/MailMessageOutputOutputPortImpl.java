@@ -19,7 +19,6 @@ public class MailMessageOutputOutputPortImpl implements MailMessageOutputOutputP
 
   @Override
   public void sendNotification(NotificationDTO notificationDTO) {
-    System.out.println("AQUI 123 " + notificationDTO);
     kafkaTemplate.send("tech_challange_subs_fase5-output", notificationDTO.toString());
   }
 }

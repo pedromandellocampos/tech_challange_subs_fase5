@@ -64,11 +64,8 @@ public class MessageServiceOutputPortImplRest implements MessageServiceOutputPor
     HttpEntity<MailTrapEmailRequest> request = new HttpEntity<>(requestBody, headers);
 
     // Envia a requisição
-    //RestTemplate restTemplate = new RestTemplate();
-    //ResponseEntity<String> response = restTemplate.postForEntity(url, request, String.class);
-
-    //System.out.println("Status: " + response.getStatusCode());
-   // System.out.println("Resposta: " + response.getBody());
+    RestTemplate restTemplate = new RestTemplate();
+    ResponseEntity<String> response = restTemplate.postForEntity(url, request, String.class);
 
   }
 }

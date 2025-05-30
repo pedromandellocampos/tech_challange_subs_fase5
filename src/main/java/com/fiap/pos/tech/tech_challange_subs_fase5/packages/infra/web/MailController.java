@@ -77,8 +77,6 @@ public class MailController {
 
     MailDTO mailDTO = updateMailDTOToDTOMapper.toDto(updateMailDTO);
     mailDTO.setId(id);
-    System.out.println("UpdateMailDTO -->> " + updateMailDTO);
-    System.out.println("MailDTO -->> " + mailDTO);
     MailDTO mailDTOToReturn = mailUseCaseInputPort.receiveMail(mailDTO);
     return ResponseEntity.ok(mailDTOToReturn);
   }
@@ -122,9 +120,7 @@ public class MailController {
 
     UserDetails userDetails = (ResidentUserDetailDTO) authentication.getPrincipal();
     ResidentDTO residentDTO = residentUseCaseInputPort.getResidentByEmail(userDetails.getUsername());
-    System.out.println("ResidentDTO -->> " + residentDTO);
     List<MailDTO> mailDTOList = mailUseCaseInputPort.getMailByUnity(residentDTO.getApartment());
-    System.out.println("MailDTOList -->> " + mailDTOList);
     return ResponseEntity.ok(mailDTOList);
   }
 
@@ -138,7 +134,6 @@ public class MailController {
   )
   public ResponseEntity confirmNotification(@PathVariable Long id, Authentication authentication) {
 
-    System.out.println("Confirm Notification for Mail ID: " + id);
     UserDetails userDetails = (ResidentUserDetailDTO) authentication.getPrincipal();
     ResidentDTO residentDTO = residentUseCaseInputPort.getResidentByEmail(userDetails.getUsername());
 

@@ -76,7 +76,6 @@ public class EmployeeController {
     EmployeeDTO employeeDTO = employeeUseCaseInputPort.getEmployeeById(id);
 
     EmployeeDTOToReturn employeeDTOToReturn = employeeDTOToReturnMapper.toDto(employeeDTO);
-    System.out.println("EmployeeDTOToReturn: " + employeeDTO.getName());
 
     return ResponseEntity.ok().body(employeeDTOToReturn);
   }
@@ -156,13 +155,11 @@ public class EmployeeController {
     @SecurityRequirement(name = "")
   )
   public ResponseEntity<TokenReturnDTO> authorize(@RequestBody @Valid EmployeeLoginDTO employeeLoginDTO) {
-    System.out.println("AQUI");
-    var userNamePassword = new UsernamePasswordAuthenticationToken(employeeLoginDTO.getEmail(), employeeLoginDTO.getPassword());
-    System.out.println("AQUI");
 
+    var userNamePassword = new UsernamePasswordAuthenticationToken(employeeLoginDTO.getEmail(), employeeLoginDTO.getPassword());
     var auth = this.authenticationManager.authenticate(userNamePassword);
     var token = jwtHandler.generateToken((EmployeeUserDetailDTO) auth.getPrincipal());
-    System.out.println("AQUI");
+
     return ResponseEntity.ok(new TokenReturnDTO(token));
   }
 
