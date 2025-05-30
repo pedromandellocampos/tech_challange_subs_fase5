@@ -1,9 +1,11 @@
 package com.fiap.pos.tech.tech_challange_subs_fase5.resident.infra.web;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fiap.pos.tech.tech_challange_subs_fase5.employee.core.usecases.Dto.EmployeeDTO;
 import com.fiap.pos.tech.tech_challange_subs_fase5.employee.core.usecases.ports.input.EmployeeUseCaseInputPort;
 import com.fiap.pos.tech.tech_challange_subs_fase5.employee.infra.web.dto.EmployeeDTORegister;
 import com.fiap.pos.tech.tech_challange_subs_fase5.employee.infra.web.dto.EmployeeLoginDTO;
+import com.fiap.pos.tech.tech_challange_subs_fase5.resident.core.usecase.dto.ResidentDTO;
 import com.fiap.pos.tech.tech_challange_subs_fase5.resident.core.usecase.ports.input.ResidentUseCaseInputPort;
 import com.fiap.pos.tech.tech_challange_subs_fase5.resident.infra.web.dto.ChangePasswordDTO;
 import com.fiap.pos.tech.tech_challange_subs_fase5.resident.infra.web.dto.ResidentDTORegister;
@@ -37,6 +39,8 @@ class ResidentControllerChangePasswordTest {
 
   private String employeeToken;
   private String residentToken;
+  private Long loggedEmployeeId;
+  private Long loggedResidentId;
   @Autowired
   private ResidentUseCaseInputPort residentUseCaseInputPort;
 
@@ -63,7 +67,8 @@ class ResidentControllerChangePasswordTest {
     employee.setDateOfBirth("20/05/1997");
     employee.setHireDate("20/05/1997");
     try{
-      employeeUseCaseInputPort.getEmployeeByEmail("funcionario@email.com");
+      EmployeeDTO employeeDTO = employeeUseCaseInputPort.getEmployeeByEmail("funcionario@email.com");
+      this.loggedEmployeeId = employeeDTO.getId();
     } catch (Exception e) {
       mockMvc.perform(post("/api/v1/employees").content(objectMapper.writeValueAsString(employee)).contentType(
         MediaType.APPLICATION_JSON)).andExpect(status().isCreated());
@@ -97,7 +102,8 @@ class ResidentControllerChangePasswordTest {
     resident.setApartment("101");
 
     try{
-      residentUseCaseInputPort.getResidentByEmail("email@email.com");
+      ResidentDTO residentDTO = residentUseCaseInputPort.getResidentByEmail("email@email.com");
+      this.loggedResidentId = residentDTO.getId();
     } catch (Exception e) {
       mockMvc.perform(post("/api/v1/residents").content(objectMapper.writeValueAsString(resident)).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isCreated());
     }
@@ -124,7 +130,7 @@ class ResidentControllerChangePasswordTest {
     ChangePasswordDTO changePasswordDTO = new ChangePasswordDTO("senhaSegura123");
     String changePasswordJson = objectMapper.writeValueAsString(changePasswordDTO);
 
-    mockMvc.perform(put("/api/v1/residents/change-password/1")
+    mockMvc.perform(put("/api/v1/residents/change-password/" + this.loggedResidentId)
         .contentType(MediaType.APPLICATION_JSON)
         .content(changePasswordJson)
         .header("Authorization", residentToken))

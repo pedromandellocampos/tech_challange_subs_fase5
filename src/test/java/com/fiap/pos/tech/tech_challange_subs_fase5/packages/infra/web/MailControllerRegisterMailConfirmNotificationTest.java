@@ -5,6 +5,7 @@ import com.fiap.pos.tech.tech_challange_subs_fase5.employee.core.usecases.ports.
 import com.fiap.pos.tech.tech_challange_subs_fase5.employee.infra.web.dto.EmployeeDTORegister;
 import com.fiap.pos.tech.tech_challange_subs_fase5.employee.infra.web.dto.EmployeeLoginDTO;
 import com.fiap.pos.tech.tech_challange_subs_fase5.packages.infra.web.dto.CreateMailDTO;
+import com.fiap.pos.tech.tech_challange_subs_fase5.resident.core.usecase.dto.ResidentDTO;
 import com.fiap.pos.tech.tech_challange_subs_fase5.resident.core.usecase.ports.input.ResidentUseCaseInputPort;
 import com.fiap.pos.tech.tech_challange_subs_fase5.resident.infra.web.dto.ResidentDTORegister;
 import com.jayway.jsonpath.JsonPath;
@@ -36,6 +37,8 @@ class MailControllerRegisterMailConfirmNotificationTest {
   private String residentToken;
   @Autowired
   private ResidentUseCaseInputPort residentUseCaseInputPort;
+  private Long loggedEmployeeId;
+  private Long loggedResidentId;
 
   @BeforeEach
   void setUp() {
@@ -93,7 +96,8 @@ class MailControllerRegisterMailConfirmNotificationTest {
     resident.setApartment("101");
 
     try{
-      residentUseCaseInputPort.getResidentByEmail("email@email.com");
+      ResidentDTO residentDTO = residentUseCaseInputPort.getResidentByEmail("email@email.com");
+      this.loggedResidentId = residentDTO.getId();
     } catch (Exception e) {
       mockMvc.perform(post("/api/v1/residents").content(objectMapper.writeValueAsString(resident)).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isCreated());
     }
@@ -144,7 +148,7 @@ class MailControllerRegisterMailConfirmNotificationTest {
     mockMvc.perform(get("/api/v1/mail/" + mailId)
         .header("Authorization", employeeToken))
       .andExpect(status().isOk())
-      .andExpect(jsonPath("$.residentConfirmedMailId").value(1))
+      .andExpect(jsonPath("$.residentConfirmedMailId").value(loggedResidentId))
       .andExpect(jsonPath("$.receivedByEmail").value(true));
 
   }

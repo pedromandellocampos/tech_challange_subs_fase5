@@ -1,9 +1,11 @@
 package com.fiap.pos.tech.tech_challange_subs_fase5.resident.infra.web;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fiap.pos.tech.tech_challange_subs_fase5.employee.core.usecases.Dto.EmployeeDTO;
 import com.fiap.pos.tech.tech_challange_subs_fase5.employee.core.usecases.ports.input.EmployeeUseCaseInputPort;
 import com.fiap.pos.tech.tech_challange_subs_fase5.employee.infra.web.dto.EmployeeDTORegister;
 import com.fiap.pos.tech.tech_challange_subs_fase5.employee.infra.web.dto.EmployeeLoginDTO;
+import com.fiap.pos.tech.tech_challange_subs_fase5.resident.core.usecase.dto.ResidentDTO;
 import com.fiap.pos.tech.tech_challange_subs_fase5.resident.core.usecase.ports.input.ResidentUseCaseInputPort;
 import com.fiap.pos.tech.tech_challange_subs_fase5.resident.infra.web.dto.ResidentDTORegister;
 import com.jayway.jsonpath.JsonPath;
@@ -14,6 +16,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+
+import java.time.format.ResolverStyle;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -35,6 +39,8 @@ class ResidentControllerDeleteTest {
 
   private String employeeToken;
   private String residentToken;
+  private Long loggedEmployeeId;
+  private Long loggedResidentId;
   @Autowired
   private ResidentUseCaseInputPort residentUseCaseInputPort;
 
@@ -61,7 +67,8 @@ class ResidentControllerDeleteTest {
     employee.setDateOfBirth("20/05/1997");
     employee.setHireDate("20/05/1997");
     try{
-      employeeUseCaseInputPort.getEmployeeByEmail("funcionario@email.com");
+      EmployeeDTO employeeDTO = employeeUseCaseInputPort.getEmployeeByEmail("funcionario@email.com");
+      this.loggedEmployeeId = employeeDTO.getId();
     } catch (Exception e) {
       mockMvc.perform(post("/api/v1/employees").content(objectMapper.writeValueAsString(employee)).contentType(
         MediaType.APPLICATION_JSON)).andExpect(status().isCreated());
@@ -95,7 +102,8 @@ class ResidentControllerDeleteTest {
     resident.setApartment("101");
 
     try{
-      residentUseCaseInputPort.getResidentByEmail("email@email.com");
+      ResidentDTO residentDTO = residentUseCaseInputPort.getResidentByEmail("email@email.com");
+
     } catch (Exception e) {
       mockMvc.perform(post("/api/v1/residents").content(objectMapper.writeValueAsString(resident)).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isCreated());
     }
@@ -110,7 +118,8 @@ class ResidentControllerDeleteTest {
     resident2.setApartment("101");
 
     try{
-      residentUseCaseInputPort.getResidentByEmail("email2@email.com");
+      ResidentDTO residentDTO = residentUseCaseInputPort.getResidentByEmail("email2@email.com");
+      this.loggedResidentId = residentDTO.getId();
     } catch (Exception e) {
       mockMvc.perform(post("/api/v1/residents").content(objectMapper.writeValueAsString(resident2)).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isCreated());
     }
@@ -150,7 +159,7 @@ class ResidentControllerDeleteTest {
   @Test
   void deleteResidentSuccess() throws Exception {
     mockMvc.perform(
-            org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete("/api/v1/residents/2")
+            org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete("/api/v1/residents/" + this.loggedResidentId)
                 .header("Authorization", this.residentToken)
         )
         .andExpect(status().isNoContent());

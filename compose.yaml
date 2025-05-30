@@ -12,12 +12,20 @@ services:
       resources:
         limits:
           memory: 2g
+    environment:
+      - DB_URL=jdbc:postgresql://postgres:5432/mydatabase
+      - DB_USER=postgres
+      - DB_PASS=123456
+      - KAFKA_URL=kafka:9092
+      - KAFKA_CONSUMER_GROUP_ID=fiap-tech-challenge-5
+      - JWT_ISSUER=fiap-tech-challenge-5
+      - JWT_SECRET=postechvalida-123
   postgres:
     image: 'postgres:latest'
     environment:
-      - 'POSTGRES_DB=mydatabase'
-      - 'POSTGRES_PASSWORD=123456'
-      - 'POSTGRES_USER=postgres'
+      - POSTGRES_DB=mydatabase
+      - POSTGRES_PASSWORD=123456
+      - POSTGRES_USER=postgres
     ports:
       - '5432:5432'
     deploy:
@@ -35,7 +43,7 @@ services:
       - KAFKA_CFG_LISTENERS=PLAINTEXT://0.0.0.0:9092,CONTROLLER://0.0.0.0:9093
       - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092
       - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
-      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=0@localhost:9093
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=0@kafka:9093
       - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
     deploy:
       resources:

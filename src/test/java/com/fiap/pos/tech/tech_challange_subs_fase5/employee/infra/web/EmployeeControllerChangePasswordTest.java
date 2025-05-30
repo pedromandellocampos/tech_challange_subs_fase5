@@ -1,6 +1,7 @@
 package com.fiap.pos.tech.tech_challange_subs_fase5.employee.infra.web;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fiap.pos.tech.tech_challange_subs_fase5.employee.core.usecases.Dto.EmployeeDTO;
 import com.fiap.pos.tech.tech_challange_subs_fase5.employee.core.usecases.ports.input.EmployeeUseCaseInputPort;
 import com.fiap.pos.tech.tech_challange_subs_fase5.employee.infra.web.dto.ChangePasswordDTO;
 import com.fiap.pos.tech.tech_challange_subs_fase5.employee.infra.web.dto.EmployeeDTORegister;
@@ -39,6 +40,7 @@ class EmployeeControllerChangePasswordTest {
   private String residentToken;
   @Autowired
   private ResidentUseCaseInputPort residentUseCaseInputPort;
+  private Long loggedEmployeeId;
 
   @BeforeEach
   void setUp() {
@@ -63,7 +65,8 @@ class EmployeeControllerChangePasswordTest {
     employee.setDateOfBirth("20/05/1997");
     employee.setHireDate("20/05/1997");
     try{
-      employeeUseCaseInputPort.getEmployeeByEmail("funcionario@email.com");
+      EmployeeDTO employeeDTO = employeeUseCaseInputPort.getEmployeeByEmail("funcionario@email.com");
+      this.loggedEmployeeId = employeeDTO.getId();
     } catch (Exception e) {
       mockMvc.perform(post("/api/v1/employees").content(objectMapper.writeValueAsString(employee)).contentType(
         MediaType.APPLICATION_JSON)).andExpect(status().isCreated());
@@ -128,7 +131,7 @@ class EmployeeControllerChangePasswordTest {
 
     String changePasswordJson = objectMapper.writeValueAsString(changePasswordDTO);
 
-    mockMvc.perform(put("/api/v1/employees/change-password/1")
+    mockMvc.perform(put("/api/v1/employees/change-password/" + loggedEmployeeId)
         .contentType(MediaType.APPLICATION_JSON)
         .content(changePasswordJson)
         .header("Authorization", employeeToken))
@@ -142,7 +145,7 @@ class EmployeeControllerChangePasswordTest {
     ChangePasswordDTO changePasswordDTO = new ChangePasswordDTO("123");
     String changePasswordJson = objectMapper.writeValueAsString(changePasswordDTO);
 
-    mockMvc.perform(put("/api/v1/employees/change-password/1")
+    mockMvc.perform(put("/api/v1/employees/change-password/" + loggedEmployeeId)
         .contentType(MediaType.APPLICATION_JSON)
         .content(changePasswordJson)
         .header("Authorization", employeeToken))

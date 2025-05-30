@@ -121,18 +121,20 @@ public class EmployeeUseCase implements EmployeeUseCaseInputPort {
 
 
   public void validateEmployee(Employee employee) {
+    System.out.println("Email cannot be null or empty aQUIIII2F");
     if (employee.getEmail() == null || employee.getEmail().isEmpty()) {
+      System.out.println("Email cannot be null or empty aQUIIII");
       throw new IllegalArgumentException("Email cannot be null or empty");
     } else {
-      try{
-      EmployeeDTO employee1 = getEmployeeByEmail(employee.getEmail());
-        if (employee1 != null && employee1.getId() != employee.getId()) {
-          throw new IllegalArgumentException("Email already in use");
-        }
-      } catch (Exception e){
-        // If an exception is thrown, it means the email does not exist, so we can proceed
+      Employee residentEmail = employeePersistenceOutputPort.findByEmail(employee.getEmail()).orElse(null);
+      if(residentEmail != null && employee.getId() != null && residentEmail.getId() != employee.getId()) {
+        throw new IllegalArgumentException("Email already exists");
+      }
+      if(residentEmail != null && employee.getId() == null) {
+        throw new IllegalArgumentException("Email already exists");
       }
     }
   }
+
 
 }
