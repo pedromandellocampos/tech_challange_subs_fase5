@@ -34,6 +34,7 @@ public class ResidentUseCase implements ResidentUseCaseInputPort {
       throw new IllegalArgumentException("Phone cannot be null or empty");
     }
 
+    System.out.println("ResidentDTO -->> " + ResidentDTO);
     validateResident(resident);
     return residentMapper.toDto(residentPersistenceOutputPort.save(resident));
   }
@@ -118,19 +119,22 @@ public class ResidentUseCase implements ResidentUseCaseInputPort {
     return residentMapper.toDto(residentPersistenceOutputPort.save(resident));
   }
 
+
   public void validateResident(Resident resident) {
+    System.out.println("Email cannot be null or empty aQUIIII2F");
     if (resident.getEmail() == null || resident.getEmail().isEmpty()) {
+      System.out.println("Email cannot be null or empty aQUIIII");
       throw new IllegalArgumentException("Email cannot be null or empty");
     } else {
-      try{
-        ResidentDTO residentDTO = getResidentById(resident.getId());
-        if(residentDTO != null && residentDTO.getId() != resident.getId()) {
+        Resident residentEmail = residentPersistenceOutputPort.findByEmail(resident.getEmail()).orElse(null);
+        if(residentEmail != null && resident.getId() != null && residentEmail.getId() != resident.getId()) {
           throw new IllegalArgumentException("Email already exists");
         }
-      } catch (Exception e) {
+      if(residentEmail != null && resident.getId() == null) {
+        throw new IllegalArgumentException("Email already exists");
+      }
       }
     }
-  }
 
   public List<ResidentDTO> getResidentByUnity(String unity) {
     List<Resident> resident = residentPersistenceOutputPort.findByUnity(unity);

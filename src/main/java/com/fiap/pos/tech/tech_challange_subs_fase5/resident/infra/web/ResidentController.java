@@ -37,7 +37,6 @@ public class ResidentController {
   JwtHandler jwtHandler;
 
   @PostMapping
-  @Transactional
   @Operation(
       summary = "Create a new resident",
       description = "This endpoint allows you to create a new resident in the system. The password will be encoded before saving."
@@ -57,7 +56,9 @@ public class ResidentController {
   @Transactional
   @Operation(
       summary = "Update resident information",
-      description = "This endpoint allows you to update your own resident information. You can only update your own account."
+      description = "This endpoint allows you to update your own resident information. You can only update your own account.",
+    security =
+    @SecurityRequirement(name = "jwtToken")
   )
   public ResponseEntity<ResidentDTOToReturn> updateResident(@RequestBody @Valid ResidentUpdateDTO residentUpdateDTO, @PathVariable Long id, Authentication authentication) {
 
@@ -78,7 +79,9 @@ public class ResidentController {
   @Transactional(readOnly = true)
   @Operation(
       summary = "Get resident by ID",
-      description = "This endpoint retrieves a resident's details by their ID."
+      description = "This endpoint retrieves a resident's details by their ID.",
+    security =
+    @SecurityRequirement(name = "jwtToken")
   )
   public ResponseEntity<ResidentDTOToReturn> getResident(@PathVariable Long id){
     ResidentDTO residentDTO = residentUseCaseInputPort.getResidentById(id);
@@ -91,7 +94,9 @@ public class ResidentController {
   @Transactional(readOnly = true)
   @Operation(
       summary = "List all residents",
-      description = "This endpoint retrieves a paginated list of all residents."
+      description = "This endpoint retrieves a paginated list of all residents.",
+    security =
+    @SecurityRequirement(name = "jwtToken")
   )
   public ResponseEntity<List<ResidentDTOToReturn>> getAllResidents(@RequestParam(required = false) int page, @RequestParam(required = false) int size) {
     List<ResidentDTO> residentDTOList = residentUseCaseInputPort.listAllResidents(page, size);
@@ -102,7 +107,9 @@ public class ResidentController {
   @Transactional
   @Operation(
       summary = "Delete a resident",
-      description = "This endpoint allows you to delete your own resident account. You can only delete your own account."
+      description = "This endpoint allows you to delete your own resident account. You can only delete your own account.",
+    security =
+    @SecurityRequirement(name = "jwtToken")
   )
   public ResponseEntity<Object> deleteResident(@PathVariable Long id, Authentication authentication) {
 
@@ -123,7 +130,9 @@ public class ResidentController {
   @Transactional(readOnly = true)
   @Operation(
       summary = "Resident login",
-      description = "This endpoint allows a resident to log in and receive a JWT token."
+      description = "This endpoint allows a resident to log in and receive a JWT token.",
+    security =
+    @SecurityRequirement(name = "")
   )
   public ResponseEntity<TokenReturnDTO> login(@RequestBody @Valid ResidentLoginDTO residentLoginDTO) {
 
@@ -140,7 +149,7 @@ public class ResidentController {
       summary = "Change resident password",
       description = "This endpoint allows a resident to change their own password. You can only change your own password.",
     security =
-    @SecurityRequirement(name = "")
+    @SecurityRequirement(name = "jwtToken")
   )
   public ResponseEntity<Object> changePassword(@PathVariable(name = "id") Long id, @RequestBody @Valid ChangePasswordDTO changePasswordDTO, Authentication authentication) {
 

@@ -10,6 +10,7 @@ import com.fiap.pos.tech.tech_challange_subs_fase5.resident.core.usecase.dto.Res
 import com.fiap.pos.tech.tech_challange_subs_fase5.resident.core.usecase.ports.input.ResidentUseCaseInputPort;
 import com.fiap.pos.tech.tech_challange_subs_fase5.resident.infra.security.dto.ResidentUserDetailDTO;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -37,7 +38,9 @@ public class MailController {
   @Transactional
   @Operation(
       summary = "Register a new mail",
-      description = "This endpoint allows you to register a new mail in the system. The employee recipient is determined by the authenticated user.")
+      description = "This endpoint allows you to register a new mail in the system. The employee recipient is determined by the authenticated user.",
+    security =
+    @SecurityRequirement(name = "jwtToken"))
   public ResponseEntity<MailDTO> registerMail(@RequestBody CreateMailDTO mailDTO, Authentication authentication) {
 
     UserDetails userDetails = (EmployeeUserDetailDTO) authentication.getPrincipal();
@@ -53,7 +56,9 @@ public class MailController {
   @Transactional(readOnly = true)
   @Operation(
       summary = "Get mail by ID",
-      description = "This endpoint retrieves a mail by its ID."
+      description = "This endpoint retrieves a mail by its ID.",
+    security =
+    @SecurityRequirement(name = "jwtToken")
   )
   public ResponseEntity<MailDTO> getMailById(@PathVariable Long id) {
     MailDTO mailDTO = mailUseCaseInputPort.getMailById(id);
@@ -64,7 +69,9 @@ public class MailController {
   @Transactional
   @Operation(
       summary = "Update mail information",
-      description = "This endpoint allows you to update the information of an existing mail."
+      description = "This endpoint allows you to update the information of an existing mail.",
+    security =
+    @SecurityRequirement(name = "jwtToken")
   )
   public ResponseEntity<MailDTO> updateMail(@RequestBody @Valid UpdateMailDTO updateMailDTO, @PathVariable Long id) {
 
@@ -80,7 +87,9 @@ public class MailController {
   @Transactional(readOnly = true)
   @Operation(
       summary = "Delete a mail",
-      description = "This endpoint allows you to delete a mail by its ID."
+      description = "This endpoint allows you to delete a mail by its ID.",
+    security =
+    @SecurityRequirement(name = "jwtToken")
   )
   public ResponseEntity<MailDTO> deleteMail(@PathVariable Long id) {
     mailUseCaseInputPort.deleteMail(id);
@@ -91,7 +100,9 @@ public class MailController {
   @Transactional(readOnly = true)
   @Operation(
       summary = "List all mails",
-      description = "This endpoint retrieves a paginated list of all mails."
+      description = "This endpoint retrieves a paginated list of all mails.",
+    security =
+    @SecurityRequirement(name = "jwtToken")
   )
   public ResponseEntity<List<MailDTO>> listAllMails(@RequestParam Integer page, @RequestParam Integer size) {
     List<MailDTO> mailDTOList = mailUseCaseInputPort.listAllMails(page, size);
@@ -103,6 +114,9 @@ public class MailController {
   @Operation(
       summary = "List my packages",
       description = "This endpoint retrieves a list of packages for the authenticated resident."
+    ,
+    security =
+    @SecurityRequirement(name = "jwtToken")
   )
   public ResponseEntity<List<MailDTO>> listMyPackages(Authentication authentication) {
 
@@ -118,7 +132,9 @@ public class MailController {
   @Transactional
   @Operation(
       summary = "Confirm notification for a mail",
-      description = "This endpoint allows a resident to confirm the notification of a mail by its ID."
+      description = "This endpoint allows a resident to confirm the notification of a mail by its ID.",
+    security =
+    @SecurityRequirement(name = "jwtToken")
   )
   public ResponseEntity confirmNotification(@PathVariable Long id, Authentication authentication) {
 

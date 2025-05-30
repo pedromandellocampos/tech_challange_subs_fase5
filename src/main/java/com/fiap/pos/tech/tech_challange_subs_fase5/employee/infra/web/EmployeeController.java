@@ -67,7 +67,9 @@ public class EmployeeController {
   @Transactional(readOnly = true)
   @Operation(
       summary = "Get employee by ID",
-      description = "This endpoint retrieves an employee's details by their ID."
+      description = "This endpoint retrieves an employee's details by their ID.",
+    security =
+    @SecurityRequirement(name = "jwtToken")
   )
   public ResponseEntity<EmployeeDTOToReturn> getEmployeeById(@PathVariable(name = "id") Long id) {
 
@@ -83,7 +85,9 @@ public class EmployeeController {
   @Transactional(readOnly = true)
   @Operation(
       summary = "Get all employees",
-      description = "This endpoint retrieves a paginated list of all employees."
+      description = "This endpoint retrieves a paginated list of all employees.",
+    security =
+    @SecurityRequirement(name = "jwtToken")
   )
   public ResponseEntity<Page<EmployeeDTOToReturn>> getAllEmployees(@RequestParam(required = false ,name = "page") int page, @RequestParam(required = false, name = "size") int size) {
 
@@ -103,7 +107,9 @@ public class EmployeeController {
   @Transactional
   @Operation(
       summary = "Update employee information",
-      description = "This endpoint allows an employee to update their own information. Only the authenticated employee can update their details."
+      description = "This endpoint allows an employee to update their own information. Only the authenticated employee can update their details.",
+    security =
+    @SecurityRequirement(name = "jwtToken")
   )
   public ResponseEntity<EmployeeDTOToReturn> updateEmployee(@PathVariable(name = "id") Long id, @RequestBody @Valid EmployeeUpdateDTO employeeUpdateDTO, Authentication authentication) {
 
@@ -125,7 +131,9 @@ public class EmployeeController {
   @Transactional
   @Operation(
       summary = "Delete an employee",
-      description = "This endpoint allows an employee to delete their own account. Only the authenticated employee can delete their account."
+      description = "This endpoint allows an employee to delete their own account. Only the authenticated employee can delete their account.",
+    security =
+    @SecurityRequirement(name = "jwtToken")
   )
   public ResponseEntity<Object> deleteEmployee(@PathVariable(name = "id") Long id, Authentication authentication){
 
@@ -162,7 +170,9 @@ public class EmployeeController {
   @Transactional
 @Operation(
       summary = "Change employee password",
-      description = "This endpoint allows an employee to change their own password. Only the authenticated employee can change their password."
+      description = "This endpoint allows an employee to change their own password. Only the authenticated employee can change their password.",
+  security =
+  @SecurityRequirement(name = "jwtToken")
   )
   public ResponseEntity<Object> changePassword(@PathVariable(name = "id") Long id, @RequestBody @Valid ChangePasswordDTO changePasswordDTO, Authentication authentication) {
 
