@@ -1,12 +1,15 @@
-package com.fiap.pos.tech.tech_challange_subs_fase5.packages.infra.repository;
+package com.fiap.pos.tech.tech_challange_subs_fase5.notification.infra.repository;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Data
@@ -16,9 +19,10 @@ public class NotificationEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
-  private String message;
-  private String type;
-  private boolean confirmed;
+  Long id;
+  String email;
+  Long mailID;
+  String message;
+  LocalDateTime messageDeliveryTimestamp;
 
 }

@@ -66,7 +66,7 @@ public class ResidentPersistenceOutputPortImpl implements ResidentPersistenceOut
 
   @Override
   public List<Resident> findByUnity(String unity) {
-      return jpaRepository.findByUnity(unity)
+      return jpaRepository.findByApartment(unity)
               .stream()
               .map(residentEntityMapper::toDomain)
               .collect(Collectors.toList());

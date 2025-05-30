@@ -2,6 +2,6 @@ package com.fiap.pos.tech.tech_challange_subs_fase5.notification.core.usecases.p
 
 import com.fiap.pos.tech.tech_challange_subs_fase5.packages.core.usecases.dto.MailDTO;
 
-public interface NotificationUseCaseInputPort {
+public interface NotificationMailUseCaseInputPort {
   void processNotification(MailDTO mailDTO);
 }

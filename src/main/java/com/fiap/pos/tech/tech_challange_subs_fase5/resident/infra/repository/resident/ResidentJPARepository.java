@@ -12,6 +12,6 @@ public interface ResidentJPARepository extends JpaRepository<ResidentEntity, Lon
   @Override
   Optional<ResidentEntity> findById(Long aLong);
   Optional<ResidentEntity> findByEmail(String email);
-  List<ResidentEntity> findByUnity(String unity);
+  List<ResidentEntity> findByApartment(String unity);
 
 }

@@ -1,4 +1,4 @@
-package com.fiap.pos.tech.tech_challange_subs_fase5.notification.core.model;
+package com.fiap.pos.tech.tech_challange_subs_fase5.notification.core.usecases.ports.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Notification {
+public class NotificationDTO {
   Long id;
   String email;
   Long mailID;
