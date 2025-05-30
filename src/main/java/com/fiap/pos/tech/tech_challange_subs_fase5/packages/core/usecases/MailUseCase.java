@@ -60,6 +60,8 @@ public class MailUseCase implements MailUseCaseInputPort {
 
   @Override
   public boolean deleteMail(Long id) {
+//    Mail mail = mailPersistenceOutputPort.getMailById(id)
+//        .orElseThrow(() -> new IllegalArgumentException("Mail not found"));
     mailPersistenceOutputPort.delete(id);
     return true;
   }

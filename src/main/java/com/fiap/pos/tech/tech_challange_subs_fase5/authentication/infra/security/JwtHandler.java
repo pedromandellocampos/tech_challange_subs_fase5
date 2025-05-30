@@ -26,7 +26,7 @@ public class JwtHandler {
   public String generateToken(EmployeeUserDetailDTO user){
     try{
       Algorithm algorithm = Algorithm.HMAC256(secret);
-      return JWT.create()
+      return "Bearer " + JWT.create()
         .withIssuer(issuer)
         .withSubject(user.getEmail())
         .withExpiresAt(genExpirationDate())
@@ -41,7 +41,7 @@ public class JwtHandler {
   public String generateToken(ResidentUserDetailDTO user){
     try{
       Algorithm algorithm = Algorithm.HMAC256(secret);
-      return JWT.create()
+      return "Bearer " + JWT.create()
         .withIssuer(issuer)
         .withSubject(user.getEmail())
         .withExpiresAt(genExpirationDate())
@@ -55,11 +55,14 @@ public class JwtHandler {
 
   public String validateToken(String token){
     try {
+
+      String tokenParsed = token.replace("Bearer ", "");
+
       Algorithm algorithm = Algorithm.HMAC256(secret);
       return JWT.require(algorithm)
         .withIssuer(issuer)
         .build()
-        .verify(token)
+        .verify(tokenParsed)
         .getSubject();
     } catch (JWTVerificationException exception){
       return "";

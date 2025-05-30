@@ -17,12 +17,12 @@ import org.springframework.context.annotation.Configuration;
 public class NotificationConfiguration {
 
   @Bean
-  public NotificationMailUseCaseInputPort notificationMailUseCaseInputPort(NotificationMailPersistenceOutputPort notificationMailPersistenceOutputPort, MailMessageOutputOutputPort mailMessageOutputOutputPort, ResidentUseCaseInputPort residentUseCaseInputPort, NotificationDTOMapper notificationDTOMapper) {
+  public NotificationMailUseCaseInputPort notificationMailUseCaseInputPort(NotificationMailPersistenceOutputPort notificationMailPersistenceOutputPort, MailMessageOutputOutputPort mailMessageOutputOutputPort, ResidentUseCaseInputPort residentUseCaseInputPort, NotificationDTOMapper notificationDTOMapper, MessageServiceOutputPort messageServiceOutputPort) {
     return new NotificationUseCase(
       mailMessageOutputOutputPort,
       residentUseCaseInputPort,
       notificationMailPersistenceOutputPort,
-      notificationDTOMapper);
+      notificationDTOMapper, messageServiceOutputPort);
   }
 
 

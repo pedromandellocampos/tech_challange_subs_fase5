@@ -84,7 +84,7 @@ public class MailController {
   }
 
   @DeleteMapping("/{id}")
-  @Transactional(readOnly = true)
+  @Transactional
   @Operation(
       summary = "Delete a mail",
       description = "This endpoint allows you to delete a mail by its ID.",

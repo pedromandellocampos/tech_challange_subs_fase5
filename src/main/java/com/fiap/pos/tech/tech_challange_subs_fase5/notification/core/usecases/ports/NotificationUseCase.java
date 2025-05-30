@@ -6,6 +6,7 @@ import com.fiap.pos.tech.tech_challange_subs_fase5.notification.core.usecases.po
 import com.fiap.pos.tech.tech_challange_subs_fase5.notification.core.usecases.ports.input.NotificationMailUseCaseInputPort;
 import com.fiap.pos.tech.tech_challange_subs_fase5.notification.core.usecases.ports.output.MailMessageInputOutputPort;
 import com.fiap.pos.tech.tech_challange_subs_fase5.notification.core.usecases.ports.output.MailMessageOutputOutputPort;
+import com.fiap.pos.tech.tech_challange_subs_fase5.notification.core.usecases.ports.output.MessageServiceOutputPort;
 import com.fiap.pos.tech.tech_challange_subs_fase5.notification.core.usecases.ports.output.NotificationMailPersistenceOutputPort;
 import com.fiap.pos.tech.tech_challange_subs_fase5.packages.core.usecases.dto.MailDTO;
 import com.fiap.pos.tech.tech_challange_subs_fase5.resident.core.usecase.dto.ResidentDTO;
@@ -24,6 +25,7 @@ public class NotificationUseCase implements NotificationMailUseCaseInputPort {
   private ResidentUseCaseInputPort residentUseCaseInputPort;
   private NotificationMailPersistenceOutputPort notificationPersistenceOutputPort;
   private NotificationDTOMapper notificationDTOMapper;
+  private MessageServiceOutputPort messageServiceOutputPort;
 
   @Override
   public void processNotification(MailDTO mailDTO) {
@@ -42,6 +44,7 @@ public class NotificationUseCase implements NotificationMailUseCaseInputPort {
         NotificationDTO notificationDTOToSend = notificationDTOMapper.toDTO(notificationSent);
 
         mailMessageOutputOutputPort.sendNotification(notificationDTOToSend);
+        messageServiceOutputPort.sendMessageToUser(notificationDTOToSend);
       }
     } else {
       System.out.println("No residents found for the specified unity: " + unity);

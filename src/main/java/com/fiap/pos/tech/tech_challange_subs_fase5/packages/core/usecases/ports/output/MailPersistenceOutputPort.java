@@ -15,6 +15,7 @@ public interface MailPersistenceOutputPort {
   Optional<Mail> getMailById(Long id);
   Mail save(Mail mail);
   boolean delete(Long id);
+  boolean deleteMail(Mail mail);
   List<Mail> findMailsByUnity(String unity);
 
 }

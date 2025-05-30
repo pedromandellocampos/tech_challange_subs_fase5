@@ -11,4 +11,5 @@ import java.util.List;
 public interface MailJPARepository extends JpaRepository<MailEntity, Long> {
   List<MailEntity> findMailEntitiesByUnity(String unity);
 
+
 }

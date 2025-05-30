@@ -61,6 +61,12 @@ public class MailPersistenceOutputPortImpl implements MailPersistenceOutputPort 
   }
 
   @Override
+  public boolean deleteMail(Mail mail) {
+    mailJPARepository.delete(mailEntityMapper.toEntity(mail));
+    return true;
+  }
+
+  @Override
   public List<Mail> findMailsByUnity(String unity) {
     List<MailEntity> mailEntities = mailJPARepository.findMailEntitiesByUnity(unity);
     return mailEntities.stream()
